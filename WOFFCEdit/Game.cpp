@@ -8,6 +8,7 @@
 #include <string>
 
 
+
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -52,6 +53,8 @@ Game::Game()
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
+
+	camera = new Camera();
 
 }
 
@@ -145,61 +148,63 @@ void Game::Update(DX::StepTimer const& timer)
 	Vector3 planarMotionVector = m_camLookDirection;
 	planarMotionVector.y = 0.0;
 
-	if (m_InputCommands.rotRight)
-	{
-		m_camOrientation.y -= m_camRotRate;
-	}
-	if (m_InputCommands.rotLeft)
-	{
-		m_camOrientation.y += m_camRotRate;
-	}	
-	
-	if (m_InputCommands.rotDown)
-	{
-		m_camOrientation.x -= m_camRotRate;
-	}	
-	
-	if (m_InputCommands.rotUp)
-	{
-		m_camOrientation.x += m_camRotRate;
-	}
+	camera->Update(m_InputCommands);
+
+	//if (m_InputCommands.rotRight)
+	//{
+	//	m_camOrientation.y -= m_camRotRate;
+	//}
+	//if (m_InputCommands.rotLeft)
+	//{
+	//	m_camOrientation.y += m_camRotRate;
+	//}	
+	//
+	//if (m_InputCommands.rotDown)
+	//{
+	//	m_camOrientation.x -= m_camRotRate;
+	//}	
+	//
+	//if (m_InputCommands.rotUp)
+	//{
+	//	m_camOrientation.x += m_camRotRate;
+	//}
 
 	//create look direction from Euler angles in m_camOrientation
-	m_camLookDirection.x = cos((m_camOrientation.y)*3.1415 / 180)*cos(m_camOrientation.x * 3.1415 / 180);
-	m_camLookDirection.y = sin((m_camOrientation.x)*3.1415 / 180);	
-	m_camLookDirection.z = sin((m_camOrientation.y)*3.1415 / 180) * cos(m_camOrientation.x * 3.1415 / 180);
-	m_camLookDirection.Normalize();	
-	
+	//m_camLookDirection.x = cos((m_camOrientation.y)*3.1415 / 180)*cos(m_camOrientation.x * 3.1415 / 180);
+	//m_camLookDirection.y = sin((m_camOrientation.x)*3.1415 / 180);	
+	//m_camLookDirection.z = sin((m_camOrientation.y)*3.1415 / 180) * cos(m_camOrientation.x * 3.1415 / 180);
+	//m_camLookDirection.Normalize();	
+	//
 	//m_camLookDirection.x = cos((m_camOrientation.y)*3.1415 / 180)*cos(m_camOrientation.x);
 	//m_camLookDirection.z = cos((m_camOrientation.y)*3.1415 / 180);
 	//m_camLookDirection.Normalize();
 
 	//create right vector from look Direction
-	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
+	//m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
 
 	//process input and update stuff
-	if (m_InputCommands.forward)
-	{	
-		m_camPosition += m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.back)
-	{
-		m_camPosition -= m_camLookDirection*m_movespeed;
-	}
-	if (m_InputCommands.right)
-	{
-		m_camPosition += m_camRight*m_movespeed;
-	}
-	if (m_InputCommands.left)
-	{
-		m_camPosition -= m_camRight*m_movespeed;
-	}
+	//if (m_InputCommands.forward)
+	//{	
+	//	m_camPosition += m_camLookDirection*m_movespeed;
+	//}
+	//if (m_InputCommands.back)
+	//{
+	//	m_camPosition -= m_camLookDirection*m_movespeed;
+	//}
+	//if (m_InputCommands.right)
+	//{
+	//	m_camPosition += m_camRight*m_movespeed;
+	//}
+	//if (m_InputCommands.left)
+	//{
+	//	m_camPosition -= m_camRight*m_movespeed;
+	//}
 
 	//update lookat point
-	m_camLookAt = m_camPosition + m_camLookDirection;
+	//m_camLookAt = m_camPosition + m_camLookDirection;
 
 	//apply camera vectors
-    m_view = Matrix::CreateLookAt(m_camPosition, m_camLookAt, Vector3::UnitY);
+    m_view = Matrix::CreateLookAt(camera->getCamPosition(), camera->getCamLookAt(), Vector3::UnitY);
 
     m_batchEffect->SetView(m_view);
     m_batchEffect->SetWorld(Matrix::Identity);
