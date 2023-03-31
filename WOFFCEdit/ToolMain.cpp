@@ -18,6 +18,15 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+
+	m_toolInputCommands.rotRight = false;
+	m_toolInputCommands.rotLeft = false;
+	m_toolInputCommands.rotUp = false;
+	m_toolInputCommands.rotDown = false;
+	m_toolInputCommands.mouse_X = 0;
+	m_toolInputCommands.mouse_Y = 0;
+	m_toolInputCommands.mouse_LB_Down = false;
+	m_toolInputCommands.mouse_LB_DoubleClickTime = 0.0f;
 	
 }
 
@@ -287,6 +296,36 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 
+	if (m_toolInputCommands.mouse_LB_Down)
+	{
+		if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
+		{
+			//double click
+			m_seconddObject = m_d3dRenderer.MousePicking();
+
+			//check if second click hits the same object as the first 
+			if (m_seconddObject == m_selectedObject)
+				m_d3dRenderer.DoubleLClick(m_selectedObject);
+
+			if (m_seconddObject != m_selectedObject) {
+				m_selectedObject = -1;
+				m_toolInputCommands.mouse_LB_DoubleClickTime = 0;
+			}
+
+			m_toolInputCommands.mouse_LB_Down = false;
+		}
+
+		if (m_toolInputCommands.mouse_LB_DoubleClickTime <= 0.0f)
+		{
+			//single click 
+			m_toolInputCommands.mouse_LB_DoubleClickTime = 1.0f;
+
+			m_selectedObject = m_d3dRenderer.MousePicking();
+			m_toolInputCommands.mouse_LB_Down = false;
+		}
+	}
+
+
 	//Renderer Update Call
 	m_d3dRenderer.Tick(&m_toolInputCommands);
 }
@@ -306,11 +345,16 @@ void ToolMain::UpdateInput(MSG * msg)
 		break;
 
 	case WM_MOUSEMOVE:
+		//update the mouse X and Y which will be sent thru to the Renderer.
+		m_toolInputCommands.mouse_X = GET_X_LPARAM(msg->lParam);
+		m_toolInputCommands.mouse_Y = GET_Y_LPARAM(msg->lParam);
 		break;
 
-	case WM_LBUTTONDOWN:	//mouse button down,  you will probably need to check when its up too
-		//set some flag for the mouse button in inputcommands
+	case WM_LBUTTONDOWN:
+		//mouse left pressed.	
+		m_toolInputCommands.mouse_LB_Down = true;
 		break;
+
 
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc

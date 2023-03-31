@@ -10,4 +10,8 @@ struct InputCommands
 	bool rotLeft;
 	bool rotUp;
 	bool rotDown;
+	int mouse_X;
+	int mouse_Y;
+	bool mouse_LB_Down;
+	float mouse_LB_DoubleClickTime;
 };

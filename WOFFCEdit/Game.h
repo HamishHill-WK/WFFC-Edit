@@ -52,6 +52,9 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
+	int	 MousePicking();
+	void DoubleLClick(int i);
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif
@@ -65,6 +68,8 @@ private:
 
 	void XM_CALLCONV DrawGrid(DirectX::FXMVECTOR xAxis, DirectX::FXMVECTOR yAxis, DirectX::FXMVECTOR origin, size_t xdivs, size_t ydivs, DirectX::GXMVECTOR color);
 
+
+
 	//tool specific
 	std::vector<DisplayObject>			m_displayList;
 	DisplayChunk						m_displayChunk;
@@ -74,18 +79,12 @@ private:
 	float								m_movespeed;
 
 	Camera* camera;
-	//camera
-	DirectX::SimpleMath::Vector3		m_camPosition;
-	DirectX::SimpleMath::Vector3		m_camOrientation;
-	DirectX::SimpleMath::Vector3		m_camLookAt;
-	DirectX::SimpleMath::Vector3		m_camLookDirection;
-	DirectX::SimpleMath::Vector3		m_camRight;
-	float m_camRotRate;
 
 	//control variables
 	bool m_grid;							//grid rendering on / off
 	// Device resources.
     std::shared_ptr<DX::DeviceResources>    m_deviceResources;
+	RECT		m_ScreenDimensions;
 
     // Rendering loop timer.
     DX::StepTimer                           m_timer;

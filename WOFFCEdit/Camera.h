@@ -12,17 +12,14 @@ public:
 	Camera();
 	~Camera();
 
-	void moveForward();
-	void moveBack();
-	void moveUp();
-	void moveDown();
-
 	void getInput(InputCommands input);
 	void setLookAt();
 	void Update(InputCommands input);
 
 	DirectX::SimpleMath::Vector3 getCamPosition();
 	DirectX::SimpleMath::Vector3 getCamLookAt();
+	
+	void setCamTarget(DirectX::SimpleMath::Vector3 newTarget);
 
 private:
 	DirectX::SimpleMath::Vector3		m_camPosition;

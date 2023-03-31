@@ -4,9 +4,7 @@
 using namespace DirectX::SimpleMath;
 using Microsoft::WRL::ComPtr;
 
-
-Camera::Camera()
-{
+Camera::Camera() {
 	m_movespeed = 0.30;
 	m_camRotRate = 3.0;
 
@@ -36,69 +34,58 @@ Camera::Camera()
 	m_camOrientation.z = 0.0f;
 }
 
-void Camera::moveForward()
-{
-}
-
-void Camera::moveBack()
-{
-}
-
-void Camera::moveUp()
-{
-}
-
-void Camera::moveDown()
-{
-}
-
-void Camera::Update(InputCommands input)
-{
+void Camera::Update(InputCommands input){
 	getInput(input);
-	setLookAt();
-
 }
 
-Vector3 Camera::getCamPosition()
-{
-	return m_camPosition;
+Vector3 Camera::getCamPosition(){return m_camPosition;}
+
+Vector3 Camera::getCamLookAt(){return m_camLookAt;}
+
+//function for changing look direction to poisition of an object
+void Camera::setCamTarget(DirectX::SimpleMath::Vector3 newTarget) {
+	m_camLookDirection.x = (newTarget.x - m_camPosition.x);
+	m_camLookDirection.y = (newTarget.y - m_camPosition.y);
+	m_camLookDirection.z = (newTarget.z - m_camPosition.z);
+	m_camLookDirection.Normalize();
+	m_camLookAt = m_camPosition + m_camLookDirection;
+
+	//calculate new orientation from forward vector. This means camera doesn't suddenly jump back to previous rotation from before focusing on an object
+	m_camOrientation.x = atan2(m_camLookDirection.y, m_camLookDirection.x) * 180/ 3.1415 ;
+	m_camOrientation.y = (asin(m_camLookDirection.z) * 180 / 3.1415);
 }
 
-Vector3 Camera::getCamLookAt()
-{
-	return m_camLookAt;
-}
 
-void Camera::setLookAt()
-{
+void Camera::setLookAt(){
 	m_camLookDirection.x = cos((m_camOrientation.y) * 3.1415 / 180) * cos(m_camOrientation.x * 3.1415 / 180);
 	m_camLookDirection.y = sin((m_camOrientation.x) * 3.1415 / 180);
 	m_camLookDirection.z = sin((m_camOrientation.y) * 3.1415 / 180) * cos(m_camOrientation.x * 3.1415 / 180);
 	m_camLookDirection.Normalize();
 	m_camLookAt = m_camPosition + m_camLookDirection;
-
 }
 
-void Camera::getInput(InputCommands input)
-{
-
+void Camera::getInput(InputCommands input){
 	if (input.rotRight)
 	{
-		m_camOrientation.y -= m_camRotRate;
+		m_camOrientation.y += m_camRotRate;
+		setLookAt();
 	}
 	if (input.rotLeft)
 	{
-		m_camOrientation.y += m_camRotRate;
+		m_camOrientation.y -= m_camRotRate;
+		setLookAt();
 	}
 
 	if (input.rotDown)
 	{
 		m_camOrientation.x -= m_camRotRate;
+		setLookAt();
 	}
 
 	if (input.rotUp)
 	{
 		m_camOrientation.x += m_camRotRate;
+		setLookAt();
 	}
 
 	m_camLookDirection.Cross(Vector3::UnitY, m_camRight);
@@ -106,19 +93,21 @@ void Camera::getInput(InputCommands input)
 	if (input.forward)
 	{
 		m_camPosition += m_camLookDirection * m_movespeed;
+		setLookAt();
 	}
 	if (input.back)
 	{
 		m_camPosition -= m_camLookDirection * m_movespeed;
+		setLookAt();
 	}
 	if (input.right)
 	{
 		m_camPosition += m_camRight * m_movespeed;
+		setLookAt();
 	}
 	if (input.left)
 	{
 		m_camPosition -= m_camRight * m_movespeed;
+		setLookAt();
 	}
-
-	
 }

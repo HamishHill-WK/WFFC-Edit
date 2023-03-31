@@ -30,6 +30,7 @@ public:	//variables
 	std::vector<SceneObject>    m_sceneGraph;	//our scenegraph storing all the objects in the current chunk
 	ChunkObject					m_chunk;		//our landscape chunk
 	int m_selectedObject;						//ID of current Selection
+	int m_seconddObject;						//ID of second object clicked, check if its the same as first selected object on double click -hh
 
 private:	//methods
 	void	onContentAdded();
