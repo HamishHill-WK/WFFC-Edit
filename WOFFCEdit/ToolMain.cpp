@@ -26,8 +26,9 @@ ToolMain::ToolMain()
 	m_toolInputCommands.mouse_X = 0;
 	m_toolInputCommands.mouse_Y = 0;
 	m_toolInputCommands.mouse_LB_Down = false;
+	m_toolInputCommands.mouse_LB_Up = false;
 	m_toolInputCommands.mouse_LB_DoubleClickTime = 0.0f;
-	
+	m_toolInputCommands.mode_terrainEditor = false;
 }
 
 
@@ -286,6 +287,11 @@ void ToolMain::onActionSaveTerrain()
 	m_d3dRenderer.SaveDisplayChunk(&m_chunk);
 }
 
+void ToolMain::setEditor()
+{
+	m_toolInputCommands.mode_terrainEditor = !m_toolInputCommands.mode_terrainEditor;
+}
+
 void ToolMain::Tick(MSG *msg)
 {
 	//do we have a selection
@@ -298,30 +304,42 @@ void ToolMain::Tick(MSG *msg)
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
-		if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
-		{
-			//double click
-			m_seconddObject = m_d3dRenderer.MousePicking();
 
-			//check if second click hits the same object as the first 
-			if (m_seconddObject == m_selectedObject)
-				m_d3dRenderer.DoubleLClick(m_selectedObject);
+		if (!m_toolInputCommands.mode_terrainEditor) {
+			if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
+			{
+				//double click
+				m_seconddObject = m_d3dRenderer.MousePicking();
+				//m_d3dRenderer.chunk();
 
-			if (m_seconddObject != m_selectedObject) {
-				m_selectedObject = -1;
-				m_toolInputCommands.mouse_LB_DoubleClickTime = 0;
+				//check if second click hits the same object as the first 
+				if (m_seconddObject == m_selectedObject)
+					m_d3dRenderer.DoubleLClick(m_selectedObject);
+
+				if (m_seconddObject != m_selectedObject) {
+					m_selectedObject = -1;
+					m_toolInputCommands.mouse_LB_DoubleClickTime = 0;
+				}
+				m_toolInputCommands.mouse_LB_Down = false;
 			}
 
-			m_toolInputCommands.mouse_LB_Down = false;
+			if (m_toolInputCommands.mouse_LB_DoubleClickTime <= 0.0f)
+			{
+				//single click 
+				m_toolInputCommands.mouse_LB_DoubleClickTime = 1.0f;
+
+				m_selectedObject = m_d3dRenderer.MousePicking();
+				m_toolInputCommands.mouse_LB_Down = false;
+			}
 		}
 
-		if (m_toolInputCommands.mouse_LB_DoubleClickTime <= 0.0f)
-		{
-			//single click 
-			m_toolInputCommands.mouse_LB_DoubleClickTime = 1.0f;
+		if (m_toolInputCommands.mode_terrainEditor) {
+			m_d3dRenderer.chunk();
 
-			m_selectedObject = m_d3dRenderer.MousePicking();
-			m_toolInputCommands.mouse_LB_Down = false;
+			if (m_toolInputCommands.mouse_LB_Up == true) {
+				m_toolInputCommands.mouse_LB_Up = false;
+				m_toolInputCommands.mouse_LB_Down = false;
+			}
 		}
 	}
 
@@ -355,7 +373,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.mouse_LB_Down = true;
 		break;
 
-
+	case WM_LBUTTONUP:
+		m_toolInputCommands.mouse_LB_Up = true;
+		break;
 	}
 	//here we update all the actual app functionality that we want.  This information will either be used int toolmain, or sent down to the renderer (Camera movement etc
 	//WASD movement

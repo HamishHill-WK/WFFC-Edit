@@ -8,7 +8,6 @@
 #include "InputCommands.h"
 #include <vector>
 
-
 class ToolMain
 {
 public: //methods
@@ -22,7 +21,7 @@ public: //methods
 	void	onActionLoad();													//load the current chunk
 	afx_msg	void	onActionSave();											//save the current chunk
 	afx_msg void	onActionSaveTerrain();									//save chunk geometry
-
+	void setEditor();
 	void	Tick(MSG *msg);
 	void	UpdateInput(MSG *msg);
 

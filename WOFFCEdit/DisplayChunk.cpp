@@ -78,7 +78,6 @@ void DisplayChunk::InitialiseBatch()
 		}
 	}
 	CalculateTerrainNormals();
-	
 }
 
 void DisplayChunk::LoadHeightMap(std::shared_ptr<DX::DeviceResources>  DevResources)
@@ -179,9 +178,70 @@ void DisplayChunk::UpdateTerrain()
 
 }
 
-void DisplayChunk::GenerateHeightmap()
+void DisplayChunk::GenerateHeightmap(int i, int j)
 {
+
+	//PIP = IntersectPos; pos found
+	//for (int x = 0; x < 10; x++)
+	//	for (int y = 0; y < 10; y++)
+	//		m_terrainGeometry[x][y].position.y += 1000;
 	//insert how YOU want to update the heigtmap here! :D
+	//m_terrainGeometry[0][0].position
+	//for (size_t i = 0; i < TERRAINRESOLUTION; i++)
+	//{
+	//	for (size_t j = 0; j < TERRAINRESOLUTION; j++)
+	//	{
+	//		Vector3 Normal, IntersectPos;
+	//		//Vector3f P1, Vector3f P2, Vector3f P3, Vector3f R1, Vector3f R2,
+	//		// Find Triangle Normal
+	//		//Normal.Cross(m_terrainGeometry[i][j + 1].position - m_terrainGeometry[i][j].position, m_terrainGeometry[i + 1][j + 1].position - m_terrainGeometry[i][j].position);
+	//		//Normal.Normalize(); // not really needed?  Vector3f does this with cross.
+	//		Normal = m_terrainGeometry[i][j].normal;
+	//		// Find distance from LP1 and LP2 to the plane defined by the triangle
+	//		float Dist1 = (nearPoint - m_terrainGeometry[i][j].position).Dot(Normal);
+	//		float Dist2 = (farPoint - m_terrainGeometry[i][j].position).Dot(Normal);
+
+	//		if ((Dist1 * Dist2) >= 0.0f) {
+	//			//SFLog(@"no cross"); 
+	//			continue;
+	//		} // line doesn't cross the triangle.
+
+	//		if (Dist1 == Dist2) {
+	//			//SFLog(@"parallel"); 
+	//			continue;
+	//		} // line and plane are parallel
+
+	//		// Find point on the line that intersects with the plane
+	//		IntersectPos = nearPoint + (farPoint - nearPoint) * (-Dist1 / (Dist2 - Dist1));
+
+	//		// Find if the interesection point lies inside the triangle by testing it against all edges
+	//		Vector3 vTest;
+
+	//		vTest = Normal.Cross(m_terrainGeometry[i][j + 1].position - m_terrainGeometry[i][j].position);
+	//		if (vTest.Dot(IntersectPos - m_terrainGeometry[i][j].position) < 0.0f) {
+	//			//SFLog(@"no intersect P2-P1"); 
+	//			continue;
+
+	//		}
+
+	//		vTest = Normal.Cross(m_terrainGeometry[i + 1][j + 1].position - m_terrainGeometry[i][j + 1].position);
+	//		if (vTest.Dot(IntersectPos - m_terrainGeometry[i][j + 1].position) < 0.0f) {
+	//			//SFLog(@"no intersect P3-P2"); 
+	//			continue;
+	//		}
+
+	//		vTest = Normal.Cross(m_terrainGeometry[i][j].position - m_terrainGeometry[i +1][j + 1].position);
+	//		if (vTest.Dot(IntersectPos - m_terrainGeometry[i][j].position) < 0.0f) {
+	//			//SFLog(@"no intersect P1-P3"); 
+	//			continue;
+	//		}
+
+			//PIP = IntersectPos; pos found
+			//for(int x = 0 ; x <10; x++)
+			//	for(int y = 0 ; y <10; y++)
+					m_terrainGeometry[i][j].position.y += 10;
+	//	}
+	//}
 }
 
 void DisplayChunk::CalculateTerrainNormals()

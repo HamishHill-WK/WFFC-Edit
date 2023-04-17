@@ -179,6 +179,7 @@
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="SelectDialogue.cpp" />
     <ClCompile Include="sqlite3.c" />
+    <ClCompile Include="Terraindialogue.cpp" />
     <ClCompile Include="ToolMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +200,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="MFCMain.h" />
+    <ClInclude Include="Terraindialogue.h" />
     <ClInclude Include="ToolMain.h" />
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +214,7 @@
     <ResourceCompile Include="Win32SimpleSample.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap1.bmp" />
     <Image Include="toolbar1.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -18,6 +18,8 @@ public:
 
 	DirectX::SimpleMath::Vector3 getCamPosition();
 	DirectX::SimpleMath::Vector3 getCamLookAt();
+	DirectX::SimpleMath::Vector3 getCamOrientaion();
+	
 	
 	void setCamTarget(DirectX::SimpleMath::Vector3 newTarget);
 

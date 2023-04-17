@@ -12,6 +12,7 @@ struct InputCommands
 	bool rotDown;
 	int mouse_X;
 	int mouse_Y;
-	bool mouse_LB_Down;
+	bool mouse_LB_Down;bool mouse_LB_Up;
 	float mouse_LB_DoubleClickTime;
+	bool mode_terrainEditor;
 };

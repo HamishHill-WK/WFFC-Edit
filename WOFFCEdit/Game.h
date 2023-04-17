@@ -52,6 +52,11 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
+	DirectX::SimpleMath::Vector4 equationPlane(DirectX::XMFLOAT3 x, DirectX::XMFLOAT3 y, DirectX::XMFLOAT3 z);
+
+	DirectX::XMFLOAT3 intpoint;
+
+	void chunk();
 	int	 MousePicking();
 	void DoubleLClick(int i);
 
