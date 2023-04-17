@@ -339,8 +339,8 @@ void Game::chunk() {
 
             if (e) {
                 Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
-                if (IntersectionPoint.x <=5 && IntersectionPoint.z <= 5
-                    && IntersectionPoint.x >= -5 && IntersectionPoint.z >= -5) {
+                if (IntersectionPoint.x <=2.5 && IntersectionPoint.z <= 2.5
+                    && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
                     intpoint = IntersectionPoint;
                     m_displayChunk.GenerateHeightmap(i, j);
                }

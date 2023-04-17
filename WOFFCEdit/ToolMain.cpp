@@ -371,6 +371,7 @@ void ToolMain::UpdateInput(MSG * msg)
 	case WM_LBUTTONDOWN:
 		//mouse left pressed.	
 		m_toolInputCommands.mouse_LB_Down = true;
+		m_toolInputCommands.mouse_LB_Up = false;
 		break;
 
 	case WM_LBUTTONUP:

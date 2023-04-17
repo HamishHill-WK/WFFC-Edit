@@ -239,7 +239,7 @@ void DisplayChunk::GenerateHeightmap(int i, int j)
 			//PIP = IntersectPos; pos found
 			//for(int x = 0 ; x <10; x++)
 			//	for(int y = 0 ; y <10; y++)
-					m_terrainGeometry[i][j].position.y += 10;
+					m_terrainGeometry[i][j].position.y += 1;
 	//	}
 	//}
 }
