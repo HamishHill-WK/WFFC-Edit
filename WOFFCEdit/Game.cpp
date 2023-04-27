@@ -262,7 +262,7 @@ void Game::chunk() {
     const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
     // m_displayChunk.m_terrainGeometry[0][0].position;
-
+    bool intersectFound = false;
     for (int i = 0; i < 126; i++)
     {
         for (int j = 0; j < 126; j++)
@@ -337,20 +337,24 @@ void Game::chunk() {
             float d = Normal.Dot(Diff);
             float e = Normal.Dot(pickingVector);
 
-            if (e) {
+            if (e && !intersectFound) {
                 Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
-                if (IntersectionPoint.x <=2.5 && IntersectionPoint.z <= 2.5
+                if (IntersectionPoint.x <= 2.5 && IntersectionPoint.z <= 2.5
                     && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
                     intpoint = IntersectionPoint;
                     m_displayChunk.GenerateHeightmap(i, j);
-               }
-                
+                    intersectFound = true;
+                }
             }
-         
-            // fill in the message string and output it
+            if (intersectFound)
+                break;
+            //https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
+        }
+        if (intersectFound) {
+            intersectFound = false;
+            break;
 
-            //if(intersect.x > 0 && intersect.y > 0 && intersect.z > 0)
-             
+            }
         }
     }
 }
