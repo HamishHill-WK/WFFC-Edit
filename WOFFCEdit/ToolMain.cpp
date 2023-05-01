@@ -311,6 +311,9 @@ void ToolMain::Tick(MSG *msg)
 	if (m_toolInputCommands.wireFrameDelay > 0.0f)
 		m_toolInputCommands.wireFrameDelay -= 0.5f;
 
+	if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
+		m_toolInputCommands.mouse_LB_DoubleClickTime -= 0.1f;
+
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 
@@ -326,8 +329,8 @@ void ToolMain::Tick(MSG *msg)
 					m_d3dRenderer.DoubleLClick(m_selectedObject);
 
 				if (m_seconddObject != m_selectedObject) {
-					m_selectedObject = -1;
-					m_toolInputCommands.mouse_LB_DoubleClickTime = 0;
+					m_selectedObject = m_seconddObject;
+					m_toolInputCommands.mouse_LB_DoubleClickTime = 0.0f;
 				}
 				m_toolInputCommands.mouse_LB_Down = false;
 			}
@@ -335,11 +338,13 @@ void ToolMain::Tick(MSG *msg)
 			if (m_toolInputCommands.mouse_LB_DoubleClickTime <= 0.0f)
 			{
 				//single click 
-				m_toolInputCommands.mouse_LB_DoubleClickTime = 1.0f;
+				m_toolInputCommands.mouse_LB_DoubleClickTime = 10.0f;
 
 				m_selectedObject = m_d3dRenderer.MousePicking();
 				m_toolInputCommands.mouse_LB_Down = false;
+				return;
 			}
+
 		}
 
 		if (m_toolInputCommands.mode_terrainEditor) {

@@ -128,8 +128,8 @@ void Game::Update(DX::StepTimer const& timer)
 	m_displayChunk.m_terrainEffect->SetView(m_view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
-    if (m_InputCommands.mouse_LB_DoubleClickTime > 0.0f)
-        m_InputCommands.mouse_LB_DoubleClickTime -= (float)timer.GetElapsedSeconds();
+  //  if (m_InputCommands.mouse_LB_DoubleClickTime > 0.0f)
+    //    m_InputCommands.mouse_LB_DoubleClickTime -= (float)timer.GetElapsedSeconds();
 
 #ifdef DXTK_AUDIO
     m_audioTimerAcc -= (float)timer.GetElapsedSeconds();
@@ -218,7 +218,8 @@ void Game::Render()
     WCHAR   Buffer[256];
     std::wstring var = L"Cam X: " + std::to_wstring(camera->getCamPosition().x) + L"Cam Y: " + std::to_wstring(camera->getCamPosition().y) + L"Cam Z: " + std::to_wstring(camera->getCamPosition().z);
     std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
-    std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
+    //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
+    std::wstring var2 = L"Cam Pitch: " + std::to_wstring(m_InputCommands.mouse_LB_DoubleClickTime) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
     //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(150, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     //m_font->DrawString(m_sprites.get(), var1.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
@@ -364,32 +365,18 @@ int Game::MousePicking()
                     closestDistance = pickedDistance;
 
                     selectedID = i;
-                    m_displayList[selectedID].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function
-                    {
-                        // highlight
-                        auto fog = dynamic_cast<IEffectFog*>(effect);
-                        if (fog)
-                        {
-                            fog->SetFogEnabled(true);
-                            fog->SetFogStart(0); // 0, 0 to only put on one object, distance doesn't matter - math will slow it down
-                            fog->SetFogEnd(0);
-                            fog->SetFogColor(Colors::DarkGoldenrod);
-                        }
-                    });                 
+                    m_displayList[selectedID].m_model->UpdateEffects([&](IEffect* effect) {
+                        auto highlight = dynamic_cast<IEffectFog*>(effect);
+                        if (highlight) {
+                            highlight->SetFogEnabled(true); highlight->SetFogStart(0); highlight->SetFogEnd(0);  highlight->SetFogColor(Colors::Red);}  //highlight
+                        });
                     
                     if(m_lastID != -1 && m_lastID != selectedID)
-                    m_displayList[m_lastID].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function
-                    {
-                        // highlight
-                        auto fog = dynamic_cast<IEffectFog*>(effect);
-                        if (fog)
-                        {
-                            fog->SetFogEnabled(false);
-                            fog->SetFogStart(0); // 0, 0 to only put on one object, distance doesn't matter - math will slow it down
-                            fog->SetFogEnd(0);
-                            fog->SetFogColor(Colors::DarkGoldenrod);
-                        }
-                    });
+                        m_displayList[m_lastID].m_model->UpdateEffects([&](IEffect* effect) {
+                            auto highlight = dynamic_cast<IEffectFog*>(effect);
+                            if (highlight){ highlight->SetFogEnabled(false); highlight->SetFogStart(0); highlight->SetFogEnd(0); highlight->SetFogColor(Colors::Red);
+                           } //unhighlight 
+                            });
                 }
             }
         }
