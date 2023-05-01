@@ -62,6 +62,8 @@ public:
 	void DoubleLClick(int i);
 	int m_lastID;
 
+	bool m_wireFrame;
+
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
 #endif

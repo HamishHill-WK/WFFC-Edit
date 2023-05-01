@@ -14,5 +14,7 @@ struct InputCommands
 	int mouse_Y;
 	bool mouse_LB_Down;bool mouse_LB_Up;
 	float mouse_LB_DoubleClickTime;
+	float wireFrameDelay;
 	bool mode_terrainEditor;
+	bool mode_wireFrame;
 };

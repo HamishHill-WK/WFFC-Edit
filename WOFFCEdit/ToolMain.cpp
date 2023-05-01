@@ -302,6 +302,15 @@ void ToolMain::Tick(MSG *msg)
 		//add to scenegraph
 		//resend scenegraph to Direct X renderer
 
+	if (m_toolInputCommands.mode_wireFrame) {
+		if (m_toolInputCommands.wireFrameDelay <= 0.0f) {
+			m_d3dRenderer.m_wireFrame = !m_d3dRenderer.m_wireFrame;
+			m_toolInputCommands.wireFrameDelay = 10.0f;
+		}
+	}
+	if (m_toolInputCommands.wireFrameDelay > 0.0f)
+		m_toolInputCommands.wireFrameDelay -= 0.5f;
+
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
 
@@ -422,6 +431,11 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.rotDown = true;
 	}
-	else m_toolInputCommands.rotDown = false;
+	else m_toolInputCommands.rotDown = false;	
+	if (m_keyArray['P'])
+	{
+		m_toolInputCommands.mode_wireFrame = true;
+	}
+	else m_toolInputCommands.mode_wireFrame = false;
 	//WASD
 }

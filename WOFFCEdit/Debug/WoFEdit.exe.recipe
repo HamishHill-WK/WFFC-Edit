@@ -2,12 +2,12 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\hamis\AndroidStudioProjects\CharacterSheet\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe</FullPath>
+      <FullPath>Z:\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\hamis\AndroidStudioProjects\CharacterSheet\WFFC-Edit\WOFFCEdit\database\data\Scene1.fbx</FullPath>
+      <FullPath>Z:\WFFC-Edit\WOFFCEdit\database\data\Scene1.fbx</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
