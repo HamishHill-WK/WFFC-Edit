@@ -55,13 +55,12 @@ public:
 	void copyObj(int oldObj);
 	void pasteObj();
 
-	DirectX::SimpleMath::Vector4 equationPlane(DirectX::XMFLOAT3 x, DirectX::XMFLOAT3 y, DirectX::XMFLOAT3 z);
-
 	DirectX::XMFLOAT3 intpoint;
 
 	void chunk();
 	int	 MousePicking();
 	void DoubleLClick(int i);
+	int m_lastID;
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();

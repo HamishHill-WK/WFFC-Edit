@@ -25,7 +25,7 @@ Game::Game()
 	//initial Settings
 	//modes
 	m_grid = false;
-
+    m_lastID = -1;
 	camera = new Camera();
     intpoint = { 0, 0, 0 };
 }
@@ -216,7 +216,7 @@ void Game::Render()
     std::wstring var = L"Cam X: " + std::to_wstring(camera->getCamPosition().x) + L"Cam Y: " + std::to_wstring(camera->getCamPosition().y) + L"Cam Z: " + std::to_wstring(camera->getCamPosition().z);
     std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
     std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
-    m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
+    //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(150, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     //m_font->DrawString(m_sprites.get(), var1.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
@@ -269,8 +269,8 @@ void Game::chunk() {
         {
             //m_terrainGeometry[i][j], m_terrainGeometry[i][j + 1], m_terrainGeometry[i + 1][j + 1], m_terrainGeometry[i + 1][j]
             const XMVECTORF32 scale = { 1, 1, 1 };
-            const XMVECTORF32 translate = {m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,	
-               m_displayChunk.m_terrainGeometry[i][j].position.z};
+            const XMVECTORF32 translate = { m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,
+               m_displayChunk.m_terrainGeometry[i][j].position.z };
 
             //convert euler angles into a quaternion for the rotation of the object
             XMVECTOR rotate = Vector3(0, 0, 0);
@@ -289,49 +289,9 @@ void Game::chunk() {
             pickingVector = XMVector3Normalize(pickingVector);
 
             Vector3 Normal, IntersectPos;
-            ////Vector3f P1, Vector3f P2, Vector3f P3, Vector3f R1, Vector3f R2,
-            //// Find Triangle Normal
-            ////Normal.Cross(m_terrainGeometry[i][j + 1].position - m_terrainGeometry[i][j].position, m_terrainGeometry[i + 1][j + 1].position - m_terrainGeometry[i][j].position);
-            ////Normal.Normalize(); // not really needed?  Vector3f does this with cross.
+
             Normal = m_displayChunk.m_terrainGeometry[i][j].normal;
-            //// Find distance from LP1 and LP2 to the plane defined by the triangle
-            //float Dist1 = (nearPoint - m_displayChunk.m_terrainGeometry[i][j].position).Dot(Normal);
-            //float Dist2 = (farPoint - m_displayChunk.m_terrainGeometry[i][j].position).Dot(Normal);
 
-            //if ((Dist1 * Dist2) >= 0.0f) {
-            //    //SFLog(@"no cross"); 
-            //    continue;
-            //} // line doesn't cross the triangle.
-
-            //if (Dist1 == Dist2) {
-            //    //SFLog(@"parallel"); 
-            //    continue;
-            //} // line and plane are parallel
-
-            //// Find point on the line that intersects with the plane
-            //IntersectPos = nearPoint + (farPoint - nearPoint) * (-Dist1 / (Dist2 - Dist1));
-
-            //// Find if the interesection point lies inside the triangle by testing it against all edges
-            //Vector3 vTest;
-
-            //vTest = Normal.Cross(m_displayChunk.m_terrainGeometry[i][j + 1].position - m_displayChunk.m_terrainGeometry[i][j].position);
-            //if (vTest.Dot(IntersectPos - m_displayChunk.m_terrainGeometry[i][j].position) < 0.0f) {
-            //    //SFLog(@"no intersect P2-P1"); 
-            //    continue;
-
-            //}
-
-            //vTest = Normal.Cross(m_displayChunk.m_terrainGeometry[i + 1][j + 1].position - m_displayChunk.m_terrainGeometry[i][j + 1].position);
-            //if (vTest.Dot(IntersectPos - m_displayChunk.m_terrainGeometry[i][j + 1].position) < 0.0f) {
-            //    //SFLog(@"no intersect P3-P2"); 
-            //    continue;
-            //}
-
-            //vTest = Normal.Cross(m_displayChunk.m_terrainGeometry[i][j].position - m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
-            //if (vTest.Dot(IntersectPos - m_displayChunk.m_terrainGeometry[i][j].position) < 0.0f) {
-            //    //SFLog(@"no intersect P1-P3"); 
-            //    continue;
-            //}
 
             Vector3 Diff = translate - nearPoint;
             float d = Normal.Dot(Diff);
@@ -353,25 +313,8 @@ void Game::chunk() {
         if (intersectFound) {
             intersectFound = false;
             break;
-
-            }
         }
     }
-}
-DirectX::SimpleMath::Vector4  Game::equationPlane(DirectX::XMFLOAT3 f1, DirectX::XMFLOAT3 f2, DirectX::XMFLOAT3 f3)
-{
-    float a1 = f2.x - f1.x;
-    float b1 = f2.y - f1.y;
-    float c1 = f2.z - f1.z;
-    float a2 = f3.x - f1.x;
-    float b2 = f3.y - f1.y;
-    float c2 = f3.z - f1.z;
-    float a = b1 * c2 - b2 * c1;
-    float b = a2 * c1 - a1 * c2;
-    float c = a1 * b2 - b1 * a2;
-    float d = (-a * f1.x - b * f1.y - c * f1.z);
-    Vector4 returnV = { a, b, c, d };
-    return returnV;
 }
 
 int Game::MousePicking()
@@ -418,16 +361,41 @@ int Game::MousePicking()
                     closestDistance = pickedDistance;
 
                     selectedID = i;
+                    m_displayList[selectedID].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function
+                    {
+                        // highlight
+                        auto fog = dynamic_cast<IEffectFog*>(effect);
+                        if (fog)
+                        {
+                            fog->SetFogEnabled(true);
+                            fog->SetFogStart(0); // 0, 0 to only put on one object, distance doesn't matter - math will slow it down
+                            fog->SetFogEnd(0);
+                            fog->SetFogColor(Colors::DarkGoldenrod);
+                        }
+                    });                 
+                    
+                    if(m_lastID != -1 && m_lastID != selectedID)
+                    m_displayList[m_lastID].m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function
+                    {
+                        // highlight
+                        auto fog = dynamic_cast<IEffectFog*>(effect);
+                        if (fog)
+                        {
+                            fog->SetFogEnabled(false);
+                            fog->SetFogStart(0); // 0, 0 to only put on one object, distance doesn't matter - math will slow it down
+                            fog->SetFogEnd(0);
+                            fog->SetFogColor(Colors::DarkGoldenrod);
+                        }
+                    });
                 }
             }
         }
     }
 
     //if we got a hit.  return it.  
+    m_lastID = selectedID;
     return selectedID;
 }
-
-
 
 void XM_CALLCONV Game::DrawGrid(FXMVECTOR xAxis, FXMVECTOR yAxis, FXMVECTOR origin, size_t xdivs, size_t ydivs, GXMVECTOR color)
 {
@@ -585,12 +553,9 @@ void Game::BuildDisplayList(std::vector<SceneObject> * SceneGraph)
 		newDisplayObject.m_light_linear		= SceneGraph->at(i).light_linear;
 		newDisplayObject.m_light_quadratic	= SceneGraph->at(i).light_quadratic;
 		
-		m_displayList.push_back(newDisplayObject);
-		
+		m_displayList.push_back(newDisplayObject);	
 	}
 }
-
-
 
 void Game::BuildDisplayChunk(ChunkObject * SceneChunk)
 {
@@ -672,7 +637,6 @@ void Game::CreateDeviceDependentResources()
     DX::ThrowIfFailed(
         CreateDDSTextureFromFile(device, L"windowslogo.dds", nullptr, m_texture2.ReleaseAndGetAddressOf())
     );
-
 }
 
 // Allocate all memory resources that change on a window SizeChanged event.
@@ -698,7 +662,6 @@ void Game::CreateWindowSizeDependentResources()
     );
 
     m_batchEffect->SetProjection(m_projection);
-	
 }
 
 void Game::OnDeviceLost()
@@ -726,7 +689,6 @@ void Game::OnDeviceRestored()
 
 std::wstring StringToWCHART(std::string s)
 {
-
 	int len;
 	int slength = (int)s.length() + 1;
 	len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
