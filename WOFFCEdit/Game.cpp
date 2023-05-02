@@ -255,7 +255,12 @@ void Game::Clear()
 
 void Game::DoubleLClick(int i) {
     if(i != -1)
-    camera->setCamTarget(m_displayList[i].m_position);
+        camera->setCamTarget(m_displayList[i].m_position, false);
+}
+
+void Game::TripleLClick(int i) {
+    if(i != -1)
+        camera->setCamTarget(m_displayList[i].m_position, true);
 }
 
 void Game::chunk() {

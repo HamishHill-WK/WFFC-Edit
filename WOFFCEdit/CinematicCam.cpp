@@ -9,33 +9,31 @@ void CinematicCam::getInput(InputCommands input)
 {
 	if(tracking)
 		Camera::getInput(input);
-
-
 }
 
-void CinematicCam::moving()
+void CinematicCam::updatePos()
 {
-	Camera::setLookAt();
 	for(const DirectX::SimpleMath::Vector3 &X : positions)
 		setPos(X);	
 	
 	for(const DirectX::SimpleMath::Vector3 &Y : orientations)
 		setRot(Y);
+
+	Camera::setLookAt();
 }
 
-void CinematicCam::Update()
+void CinematicCam::Update(InputCommands input)
 {
-	if (tracking) {
-		if (*positions.end() != getCamPosition())
-			positions.push_back(getCamPosition());
+	getInput(input);
 
-		if (*positions.end() != getCamPosition())
-			positions.push_back(getCamPosition());
+	if (tracking && m_moving) { //while tracking cam position and rotation updates and while the camera is moving 
+		DirectX::SimpleMath::Vector3 newPos = getCamPosition();
+		DirectX::SimpleMath::Vector3 newRot = getCamOrientaion();
+		if (*positions.end() != newPos)	//check last position is different to current pos 
+			positions.push_back(newPos);	//add pos to vector of positions 
+
+		if (*orientations.end() != newRot)
+			positions.push_back(newRot);
 	}
-}
-
-void CinematicCam::setPos(DirectX::SimpleMath::Vector3 newPos)
-{
-	m_camPosition = newPos;
 }
 

@@ -60,8 +60,9 @@ public:
 	void chunk();
 	int	 MousePicking();
 	void DoubleLClick(int i);
+	void TripleLClick(int i);
 	int m_lastID;
-
+	float distance;
 	bool m_wireFrame;
 
 #ifdef DXTK_AUDIO

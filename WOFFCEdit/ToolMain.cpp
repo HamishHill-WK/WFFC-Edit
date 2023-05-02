@@ -310,18 +310,26 @@ void ToolMain::Tick(MSG *msg)
 	{
 
 		if (!m_toolInputCommands.mode_terrainEditor) {
+			if (m_secondObject == m_selectedObject) {
+				m_thirdObject = m_d3dRenderer.MousePicking();
+				if (m_thirdObject == m_selectedObject) {
+					m_d3dRenderer.TripleLClick(m_selectedObject);
+					m_thirdObject = -1;
+				}
+			}
+
 			if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
 			{
 				//double click
-				m_seconddObject = m_d3dRenderer.MousePicking();
+				m_secondObject = m_d3dRenderer.MousePicking();
 				//m_d3dRenderer.chunk();
 
 				//check if second click hits the same object as the first 
-				if (m_seconddObject == m_selectedObject)
+				if (m_secondObject == m_selectedObject)
 					m_d3dRenderer.DoubleLClick(m_selectedObject);
 
-				if (m_seconddObject != m_selectedObject) {
-					m_selectedObject = m_seconddObject;
+				if (m_secondObject != m_selectedObject) {
+					m_selectedObject = m_secondObject;
 					m_toolInputCommands.mouse_LB_DoubleClickTime = 0.0f;
 				}
 				m_toolInputCommands.mouse_LB_Down = false;
@@ -443,6 +451,11 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.descend	 = true;
 	}
-	else m_toolInputCommands.descend = false;
+	else m_toolInputCommands.descend = false;	
+	if (m_keyArray['N'])
+	{
+		m_toolInputCommands.mode_cineCam = true;
+	}
+	else m_toolInputCommands.mode_cineCam = false;
 	//WASD
 }

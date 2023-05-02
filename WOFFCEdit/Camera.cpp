@@ -32,11 +32,32 @@ Camera::Camera() {
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
+	
+	m_camTargetPos.x = 0.0f;
+	m_camTargetPos.y = 0.0f;
+	m_camTargetPos.z = 0.0f;
+
+	m_moving = false;
+	m_movingTo = false;
 	setLookAt();
 }
 
 void Camera::Update(InputCommands input){
 	getInput(input);
+
+	if (m_movingTo) {
+		float  distance = DirectX::SimpleMath::Vector3::Distance(m_camPosition, m_camTargetPos);
+
+		if (distance >= 5.0f) {
+			m_moving = true;
+			moveForward();
+		}
+		else {
+			m_moving = false;
+			m_movingTo = false;
+
+		}
+	}
 }
 
 Vector3 Camera::getCamPosition(){return m_camPosition;}
@@ -49,7 +70,7 @@ DirectX::SimpleMath::Vector3 Camera::getCamOrientaion()
 }
 
 //function for changing look direction to poisition of an object
-void Camera::setCamTarget(DirectX::SimpleMath::Vector3 newTarget) {
+void Camera::setCamTarget(DirectX::SimpleMath::Vector3 newTarget, bool moveTo) {
 	m_camLookDirection.x = (newTarget.x - m_camPosition.x);
 	m_camLookDirection.y = (newTarget.y - m_camPosition.y);
 	m_camLookDirection.z = (newTarget.z - m_camPosition.z);
@@ -65,8 +86,18 @@ void Camera::setCamTarget(DirectX::SimpleMath::Vector3 newTarget) {
 	
 	if (m_camOrientation.x < -90)
 		m_camOrientation.x = -90;
+
+	if (moveTo) {
+		m_camTargetPos = newTarget;
+		m_movingTo = true;
+	}
 }
 
+void Camera::moveForward()
+{
+	m_camPosition += m_camLookDirection * m_movespeed * 2;
+	setLookAt();
+}
 
 void Camera::setLookAt(){
 
@@ -85,6 +116,10 @@ void Camera::setLookAt(){
 }
 
 void Camera::getInput(InputCommands input){
+	if (m_moving)
+		return;
+
+	m_moving = true;
 	if (input.rotRight)
 	{
 		m_camOrientation.y += m_camRotRate;
@@ -151,4 +186,18 @@ void Camera::getInput(InputCommands input){
 		m_camPosition.y += 1 * m_movespeed;
 		setLookAt();
 	}
+
+	//else
+		m_moving = false;
 }
+
+void Camera::setPos(DirectX::SimpleMath::Vector3 newPos)
+{
+	m_camPosition = newPos;
+}
+
+void Camera::setRot(DirectX::SimpleMath::Vector3 newRot)
+{
+	m_camOrientation = newRot;
+}
+

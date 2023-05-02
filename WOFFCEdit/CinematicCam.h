@@ -5,13 +5,12 @@ class CinematicCam :public Camera {
 public:
 
 	CinematicCam();
-	~CinematicCam();
+	//~CinematicCam();
 	void getInput(InputCommands input);
-	void moving();
+	void updatePos();
 
-	void Update();
-	void setPos(DirectX::SimpleMath::Vector3);
-	void setRot(DirectX::SimpleMath::Vector3);
+	void Update(InputCommands input);
+
 
 private:
 	std::vector<DirectX::SimpleMath::Vector3> positions;
