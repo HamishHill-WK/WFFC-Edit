@@ -123,8 +123,10 @@ void Game::Update(DX::StepTimer const& timer)
 	//apply camera vectors
     m_view = Matrix::CreateLookAt(camera->getCamPosition(), camera->getCamLookAt(), Vector3::UnitY);
 
+
     m_batchEffect->SetView(m_view);
     m_batchEffect->SetWorld(Matrix::Identity);
+
 	m_displayChunk.m_terrainEffect->SetView(m_view);
 	m_displayChunk.m_terrainEffect->SetWorld(Matrix::Identity);
 
@@ -208,6 +210,7 @@ void Game::Render()
 
     if(m_wireFrame)
 	    context->RSSetState(m_states->Wireframe());		//uncomment for wireframe
+
 
 	//Render the batch,  This is handled in the Display chunk becuase it has the potential to get complex
 	m_displayChunk.RenderBatch(m_deviceResources);

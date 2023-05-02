@@ -175,7 +175,6 @@ void DisplayChunk::UpdateTerrain()
 		}
 	}
 	CalculateTerrainNormals();
-
 }
 
 void DisplayChunk::GenerateHeightmap(int i, int j)

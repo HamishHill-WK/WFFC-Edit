@@ -32,6 +32,7 @@ Camera::Camera() {
 	m_camOrientation.x = 0.0f;
 	m_camOrientation.y = 0.0f;
 	m_camOrientation.z = 0.0f;
+	setLookAt();
 }
 
 void Camera::Update(InputCommands input){
@@ -130,6 +131,24 @@ void Camera::getInput(InputCommands input){
 	if (input.left)
 	{
 		m_camPosition -= m_camRight * m_movespeed;
+		setLookAt();
+	}	
+
+	if (input.descend)
+	{
+		m_camPosition.y -= 1 * m_movespeed;
+		setLookAt();
+	}	
+	
+	if (input.descend)
+	{
+		m_camPosition.y -= 1 * m_movespeed;
+		setLookAt();
+	}	
+	
+	if (input.ascend)
+	{
+		m_camPosition.y += 1 * m_movespeed;
 		setLookAt();
 	}
 }

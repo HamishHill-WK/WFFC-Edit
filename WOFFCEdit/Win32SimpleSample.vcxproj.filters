@@ -63,6 +63,7 @@
     <ClCompile Include="Terraindialogue.cpp">
       <Filter>MFC</Filter>
     </ClCompile>
+    <ClCompile Include="CinematicCam.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeviceResources.h">
@@ -116,6 +117,7 @@
     <ClInclude Include="Terraindialogue.h">
       <Filter>MFC</Filter>
     </ClInclude>
+    <ClInclude Include="CinematicCam.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

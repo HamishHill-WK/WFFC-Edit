@@ -294,14 +294,6 @@ void ToolMain::setEditor()
 
 void ToolMain::Tick(MSG *msg)
 {
-	//do we have a selection
-	//do we have a mode
-	//are we clicking / dragging /releasing
-	//has something changed
-		//update Scenegraph
-		//add to scenegraph
-		//resend scenegraph to Direct X renderer
-
 	if (m_toolInputCommands.mode_wireFrame) {
 		if (m_toolInputCommands.wireFrameDelay <= 0.0f) {
 			m_d3dRenderer.m_wireFrame = !m_d3dRenderer.m_wireFrame;
@@ -441,6 +433,16 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.mode_wireFrame = true;
 	}
-	else m_toolInputCommands.mode_wireFrame = false;
+	else m_toolInputCommands.mode_wireFrame = false;	
+	if (m_keyArray[' '])
+	{
+		m_toolInputCommands.ascend = true;
+	}
+	else m_toolInputCommands.ascend = false;	
+	if (m_keyArray['Z'])
+	{
+		m_toolInputCommands.descend	 = true;
+	}
+	else m_toolInputCommands.descend = false;
 	//WASD
 }
