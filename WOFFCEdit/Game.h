@@ -61,6 +61,10 @@ public:
 	int	 MousePicking();
 	void DoubleLClick(int i);
 	void TripleLClick(int i);
+	float LineIntersectsPlane(const DirectX::SimpleMath::Vector3& lineOrigin, 
+		const DirectX::SimpleMath::Vector3& lineDirection, 
+		const DirectX::SimpleMath::Vector3& planeNormal, 
+		const DirectX::SimpleMath::Vector3& planePoint);// , float& outDistance);
 	int m_lastID;
 	float distance;
 	bool m_wireFrame;

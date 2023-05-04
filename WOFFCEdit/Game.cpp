@@ -222,7 +222,7 @@ void Game::Render()
     std::wstring var = L"Cam X: " + std::to_wstring(camera->getCamPosition().x) + L"Cam Y: " + std::to_wstring(camera->getCamPosition().y) + L"Cam Z: " + std::to_wstring(camera->getCamPosition().z);
     std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
     //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
-    std::wstring var2 = L"Cam Pitch: " + std::to_wstring(m_InputCommands.mouse_LB_DoubleClickTime) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
+    std::wstring var2 = L"Cam Pitch: " + std::to_wstring(distance) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
     //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(150, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     //m_font->DrawString(m_sprites.get(), var1.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
@@ -267,18 +267,51 @@ void Game::chunk() {
     int selectedID = -1;
     float pickedDistance = 0;
     float closestDistance = 100000;
+    int closestX = 0;
+    int closestY = 0;
 
     //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
         //they may look the same but note, the difference in Z
     const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
     const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
+    // Convert near and far source from view space to world space
+    XMVECTOR nearWorld = XMVector3TransformCoord(nearSource, XMMatrixInverse(nullptr, m_view));
+    XMVECTOR farWorld = XMVector3TransformCoord(farSource, XMMatrixInverse(nullptr, m_view));
+
+    // Calculate direction vector of the line in world space
+    XMVECTOR lineDirection = XMVector3Normalize(farWorld - nearWorld);
+    // Calculate the direction vector of the line
+
+    // Calculate the origin point of the line (camera position in world space)
+
     // m_displayChunk.m_terrainGeometry[0][0].position;
     bool intersectFound = false;
-    for (int i = 0; i < 126; i++)
+    for (int i = 0; i < 128; i++)
     {
-        for (int j = 0; j < 126; j++)
+        for (int j = 0; j < 128; j++)
         {
+            //if (intersectFound)
+              //  continue;
+
+            XMVECTOR lineOrigin = nearWorld - lineDirection * DirectX::SimpleMath::Vector3::Distance(camera->getCamPosition(), m_displayChunk.m_terrainGeometry[i][j].position);
+
+            pickedDistance = LineIntersectsPlane(lineOrigin, lineDirection, m_displayChunk.m_terrainGeometry[i][j].normal, m_displayChunk.m_terrainGeometry[i][j].position);// , pickedDistance);
+
+
+            if (pickedDistance > 0.0f) {
+                if (pickedDistance < closestDistance) {
+                    closestDistance = pickedDistance;
+                    distance = pickedDistance;
+                    closestX = i;
+                    closestY = j;
+                }
+            }
+
+            if (i == 127 && j == 127) {
+                m_displayChunk.GenerateHeightmap(closestX, closestY);
+            }
+/*
             //m_terrainGeometry[i][j], m_terrainGeometry[i][j + 1], m_terrainGeometry[i + 1][j + 1], m_terrainGeometry[i + 1][j]
             const XMVECTORF32 scale = { 1, 1, 1 };
             const XMVECTORF32 translate = { m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,
@@ -289,7 +322,7 @@ void Game::chunk() {
 
             //create set the matrix of the selected object in the world based on the translation, scale and rotation.
 
-            XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+            XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, camera->getCamOrientaion(), camera->getCamPosition());
 
             //Unproject the points on the near and far plane, with respect to the matrix we just created.
             XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
@@ -297,37 +330,74 @@ void Game::chunk() {
             XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
 
             ////turn the transformed points into our picking vector. 
-            XMVECTOR pickingVector = farPoint - nearPoint;
-            pickingVector = XMVector3Normalize(pickingVector);
-
             Vector3 Normal, IntersectPos;
 
             Normal = m_displayChunk.m_terrainGeometry[i][j].normal;
 
+            //nearPoint = camera->getCamPosition();
 
-            Vector3 Diff = translate - nearPoint;
+            XMVECTOR pickingVector = farPoint - nearPoint;
+            pickingVector = XMVector3Normalize(pickingVector);
+
+
+            //some maths magic to find the intersection point between the terrain and the mouse ray
+            Vector3 Diff = m_displayChunk.m_terrainGeometry[i][j].position - nearPoint;
+            //const float dot = Normal.Dot(Diff);
+            //const float dot2 = Normal.Dot(pickingVector);
+           // const Vector3 IntersectionPoint = nearPoint + lineCast * (dot / dot2);
+
+            //Vector3 Diff = translate - nearPoint;
             float d = Normal.Dot(Diff);
             float e = Normal.Dot(pickingVector);
 
             if (e && !intersectFound) {
                 Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
-                if (IntersectionPoint.x <= 2.5 && IntersectionPoint.z <= 2.5
-                    && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
+                const float distance1 = DirectX::SimpleMath::Vector3::Distance(IntersectPos, m_displayChunk.m_terrainGeometry[i][j].position);
+                distance = distance1;
+                if (distance1 <= 5.0f && distance1 > 0.0f) {
                     intpoint = IntersectionPoint;
                     m_displayChunk.GenerateHeightmap(i, j);
                     intersectFound = true;
                 }
-            }
-            if (intersectFound)
-                break;
+            }*/
+      
             //https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
         }
-        if (intersectFound) {
-            intersectFound = false;
-            break;
-        }
+       // if (intersectFound) {
+         //   intersectFound = false;
+           // break;
+        //}
     }
 }
+
+float Game::LineIntersectsPlane(const DirectX::SimpleMath::Vector3& lineOrigin, 
+    const DirectX::SimpleMath::Vector3& lineDirection, 
+    const DirectX::SimpleMath::Vector3& planeNormal, 
+    const DirectX::SimpleMath::Vector3& planePoint)// , float& outDistance)
+{
+    float outDistance = 0.0f;
+    const float dotProduct = lineDirection.Dot(planeNormal);
+    if (fabs(dotProduct) < FLT_EPSILON)
+    {
+        // Line is parallel to the plane
+        outDistance = 0.0f;
+        return false;
+    }
+
+    const float d = planePoint.Dot(planeNormal);
+    const float t = (d - lineOrigin.Dot(planeNormal)) / dotProduct;
+
+    if (t < 0.0f)
+    {
+        // Intersection point is behind the line origin
+        outDistance = 0.0f;
+        return outDistance;
+    }
+
+    outDistance = t;
+    return outDistance;
+}
+
 
 int Game::MousePicking()
 {
