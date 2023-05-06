@@ -13,10 +13,7 @@ using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
 
-
-
 Game::Game()
-
 {
     m_deviceResources = std::make_unique<DX::DeviceResources>();
     m_deviceResources->RegisterDeviceNotify(this);
@@ -27,7 +24,9 @@ Game::Game()
 	m_grid = false;
 	m_wireFrame = false;
     m_lastID = -1;
+    m_CameraManager = new CameraManager();    
 	camera = new Camera();
+    m_CameraManager->mainCamera = *camera;
     intpoint = { 0, 0, 0 };
 }
 
@@ -648,71 +647,73 @@ void Game::copyObj(int oldObj)
     m_copiedID = oldObj;
 }
 
-void Game::pasteObj(std::vector<SceneObject>* SceneGraph)
+void Game::pasteObj(std::vector<SceneObject>& SceneGraph)
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto devicecontext = m_deviceResources->GetD3DDeviceContext();
 
+    DisplayObject newDisplayObject;
 
-        DisplayObject newDisplayObject;
+    //load model
+    std::wstring modelwstr = StringToWCHART(SceneGraph.at(m_copiedID).model_path);							//convect string to Wchar
+    newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
 
-        //load model
-        std::wstring modelwstr = StringToWCHART(SceneGraph->at(m_copiedID).model_path);							//convect string to Wchar
-        newDisplayObject.m_model = Model::CreateFromCMO(device, modelwstr.c_str(), *m_fxFactory, true);	//get DXSDK to load model "False" for LH coordinate system (maya)
+    //Load Texture
+    std::wstring texturewstr = StringToWCHART(SceneGraph.at(m_copiedID).tex_diffuse_path);								//convect string to Wchar
+    HRESULT rs;
+    rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
 
-        //Load Texture
-        std::wstring texturewstr = StringToWCHART(SceneGraph->at(m_copiedID).tex_diffuse_path);								//convect string to Wchar
-        HRESULT rs;
-        rs = CreateDDSTextureFromFile(device, texturewstr.c_str(), nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+    //if texture fails.  load error default
+    if (rs)
+    {
+        CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+    }
 
-        //if texture fails.  load error default
-        if (rs)
+    //apply new texture to models effect
+    newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
+    {
+        auto lights = dynamic_cast<BasicEffect*>(effect);
+        if (lights)
         {
-            CreateDDSTextureFromFile(device, L"database/data/Error.dds", nullptr, &newDisplayObject.m_texture_diffuse);	//load tex into Shader resource
+            lights->SetTexture(newDisplayObject.m_texture_diffuse);
         }
+    });
 
-        //apply new texture to models effect
-        newDisplayObject.m_model->UpdateEffects([&](IEffect* effect) //This uses a Lambda function,  if you dont understand it: Look it up.
-        {
-            auto lights = dynamic_cast<BasicEffect*>(effect);
-            if (lights)
-            {
-                lights->SetTexture(newDisplayObject.m_texture_diffuse);
-            }
-        });
+    //set position     
+    newDisplayObject.m_position.x = camera->getCamLookAt().x;
+    newDisplayObject.m_position.y = camera->getCamLookAt().y;
+    newDisplayObject.m_position.z = camera->getCamLookAt().z;
 
-        //set position
-        newDisplayObject.m_position.x = SceneGraph->at(m_copiedID).posX;
-        newDisplayObject.m_position.y = SceneGraph->at(m_copiedID).posY +1.0f;
-        newDisplayObject.m_position.z = SceneGraph->at(m_copiedID).posZ;
+    //setorientation
+    newDisplayObject.m_orientation.x = SceneGraph.at(m_copiedID).rotX;
+    newDisplayObject.m_orientation.y = SceneGraph.at(m_copiedID).rotY;
+    newDisplayObject.m_orientation.z = SceneGraph.at(m_copiedID).rotZ;
 
-        //setorientation
-        newDisplayObject.m_orientation.x = SceneGraph->at(m_copiedID).rotX;
-        newDisplayObject.m_orientation.y = SceneGraph->at(m_copiedID).rotY;
-        newDisplayObject.m_orientation.z = SceneGraph->at(m_copiedID).rotZ;
+    //set scale
+    newDisplayObject.m_scale.x = SceneGraph.at(m_copiedID).scaX;
+    newDisplayObject.m_scale.y = SceneGraph.at(m_copiedID).scaY;
+    newDisplayObject.m_scale.z = SceneGraph.at(m_copiedID).scaZ;
 
-        //set scale
-        newDisplayObject.m_scale.x = SceneGraph->at(m_copiedID).scaX;
-        newDisplayObject.m_scale.y = SceneGraph->at(m_copiedID).scaY;
-        newDisplayObject.m_scale.z = SceneGraph->at(m_copiedID).scaZ;
+    //set wireframe / render flags
+    newDisplayObject.m_render = SceneGraph.at(m_copiedID).editor_render;
+    newDisplayObject.m_wireframe = SceneGraph.at(m_copiedID).editor_wireframe;
 
-        //set wireframe / render flags
-        newDisplayObject.m_render = SceneGraph->at(m_copiedID).editor_render;
-        newDisplayObject.m_wireframe = SceneGraph->at(m_copiedID).editor_wireframe;
+    newDisplayObject.m_light_type = SceneGraph.at(m_copiedID).light_type;
+    newDisplayObject.m_light_diffuse_r = SceneGraph.at(m_copiedID).light_diffuse_r;
+    newDisplayObject.m_light_diffuse_g = SceneGraph.at(m_copiedID).light_diffuse_g;
+    newDisplayObject.m_light_diffuse_b = SceneGraph.at(m_copiedID).light_diffuse_b;
+    newDisplayObject.m_light_specular_r = SceneGraph.at(m_copiedID).light_specular_r;
+    newDisplayObject.m_light_specular_g = SceneGraph.at(m_copiedID).light_specular_g;
+    newDisplayObject.m_light_specular_b = SceneGraph.at(m_copiedID).light_specular_b;
+    newDisplayObject.m_light_spot_cutoff = SceneGraph.at(m_copiedID).light_spot_cutoff;
+    newDisplayObject.m_light_constant = SceneGraph.at(m_copiedID).light_constant;
+    newDisplayObject.m_light_linear = SceneGraph.at(m_copiedID).light_linear;
+    newDisplayObject.m_light_quadratic = SceneGraph.at(m_copiedID).light_quadratic;
 
-        newDisplayObject.m_light_type = SceneGraph->at(m_copiedID).light_type;
-        newDisplayObject.m_light_diffuse_r = SceneGraph->at(m_copiedID).light_diffuse_r;
-        newDisplayObject.m_light_diffuse_g = SceneGraph->at(m_copiedID).light_diffuse_g;
-        newDisplayObject.m_light_diffuse_b = SceneGraph->at(m_copiedID).light_diffuse_b;
-        newDisplayObject.m_light_specular_r = SceneGraph->at(m_copiedID).light_specular_r;
-        newDisplayObject.m_light_specular_g = SceneGraph->at(m_copiedID).light_specular_g;
-        newDisplayObject.m_light_specular_b = SceneGraph->at(m_copiedID).light_specular_b;
-        newDisplayObject.m_light_spot_cutoff = SceneGraph->at(m_copiedID).light_spot_cutoff;
-        newDisplayObject.m_light_constant = SceneGraph->at(m_copiedID).light_constant;
-        newDisplayObject.m_light_linear = SceneGraph->at(m_copiedID).light_linear;
-        newDisplayObject.m_light_quadratic = SceneGraph->at(m_copiedID).light_quadratic;
-
-        m_displayList.push_back(newDisplayObject);
+    SceneObject s = SceneGraph.at(m_copiedID);
+    s.posY += 1.0f;
+    SceneGraph.push_back(s);
+    m_displayList.push_back(newDisplayObject);
 }
 
 #ifdef DXTK_AUDIO

@@ -300,7 +300,7 @@ void ToolMain::Tick(MSG *msg)
 	}
 
 	if (m_toolInputCommands.paste) {
-		m_d3dRenderer.pasteObj(&m_sceneGraph);
+		m_d3dRenderer.pasteObj(m_sceneGraph);
 	}
 
 	if (m_toolInputCommands.mode_wireFrame) {

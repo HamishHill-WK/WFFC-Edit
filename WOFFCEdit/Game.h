@@ -13,6 +13,7 @@
 #include "InputCommands.h"
 #include "Camera.h"
 #include <vector>
+#include "CameraManager.h"
 
 
 // A basic game implementation that creates a D3D11 device and
@@ -53,9 +54,11 @@ public:
 	void ClearDisplayList();
 
 	void copyObj(int oldObj);
-	void pasteObj(std::vector<SceneObject>* SceneGraph);
+	void pasteObj(std::vector<SceneObject>& SceneGraph);
 
 	DirectX::XMFLOAT3 intpoint;
+
+	CameraManager* m_CameraManager; 
 
 	void chunk();
 	int	 MousePicking();

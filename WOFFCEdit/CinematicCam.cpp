@@ -3,6 +3,8 @@
 CinematicCam::CinematicCam()
 {
 	positions.push_back(getCamPosition()); //first position of camera added on creation 
+	infocus = false;
+	tracking = false;
 }
 
 void CinematicCam::getInput(InputCommands input)
@@ -36,4 +38,3 @@ void CinematicCam::Update(InputCommands input)
 			positions.push_back(newRot);
 	}
 }
-
