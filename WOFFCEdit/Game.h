@@ -53,7 +53,7 @@ public:
 	void ClearDisplayList();
 
 	void copyObj(int oldObj);
-	void pasteObj();
+	void pasteObj(std::vector<SceneObject>* SceneGraph);
 
 	DirectX::XMFLOAT3 intpoint;
 
@@ -66,6 +66,7 @@ public:
 		const DirectX::SimpleMath::Vector3& planeNormal, 
 		const DirectX::SimpleMath::Vector3& planePoint);// , float& outDistance);
 	int m_lastID;
+	int m_copiedID;
 	float distance;
 	bool m_wireFrame;
 

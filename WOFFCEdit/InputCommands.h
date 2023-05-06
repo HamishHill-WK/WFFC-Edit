@@ -20,4 +20,6 @@ struct InputCommands
 	bool mode_terrainEditor;
 	bool mode_wireFrame;
 	bool mode_cineCam;
+	bool copy;
+	bool paste;
 };

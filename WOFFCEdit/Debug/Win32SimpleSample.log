@@ -8,17 +8,17 @@ C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(275,85): warni
 C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(275,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(276,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(276,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(410,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(410,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(411,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(411,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(414,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(422,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(421,153): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(421,104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(428,117): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(428,91): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(430,115): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(430,89): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(437,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(413,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(413,60): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(414,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(414,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(417,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(425,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(424,153): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(424,104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(431,117): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(431,91): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(433,115): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(433,89): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Game.cpp(440,27): warning C4018: '<': signed/unsigned mismatch
   Win32SimpleSample.vcxproj -> C:\Users\hamis\AndroidStudioProjects\WFFC-Edit\WOFFCEdit\Debug\WoFEdit.exe

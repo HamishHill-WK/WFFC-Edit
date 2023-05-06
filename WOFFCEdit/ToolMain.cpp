@@ -294,6 +294,15 @@ void ToolMain::setEditor()
 
 void ToolMain::Tick(MSG *msg)
 {
+	if (m_toolInputCommands.copy) {
+		if(m_selectedObject != -1)
+			m_d3dRenderer.copyObj(m_selectedObject);
+	}
+
+	if (m_toolInputCommands.paste) {
+		m_d3dRenderer.pasteObj(&m_sceneGraph);
+	}
+
 	if (m_toolInputCommands.mode_wireFrame) {
 		if (m_toolInputCommands.wireFrameDelay <= 0.0f) {
 			m_d3dRenderer.m_wireFrame = !m_d3dRenderer.m_wireFrame;
@@ -456,6 +465,15 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.mode_cineCam = true;
 	}
-	else m_toolInputCommands.mode_cineCam = false;
-	//WASD
+	else m_toolInputCommands.mode_cineCam = false;	
+	if (m_keyArray['C'])
+	{
+		m_toolInputCommands.copy = true;
+	}
+	else m_toolInputCommands.copy = false;	
+	if (m_keyArray['V'])
+	{
+		m_toolInputCommands.paste = true;
+	}
+	else m_toolInputCommands.paste = false;
 }
