@@ -18,17 +18,24 @@ ToolMain::ToolMain()
 	m_toolInputCommands.back		= false;
 	m_toolInputCommands.left		= false;
 	m_toolInputCommands.right		= false;
+	m_toolInputCommands.ascend = false;
+	m_toolInputCommands.descend = false;
 
 	m_toolInputCommands.rotRight = false;
 	m_toolInputCommands.rotLeft = false;
 	m_toolInputCommands.rotUp = false;
 	m_toolInputCommands.rotDown = false;
+
 	m_toolInputCommands.mouse_X = 0;
 	m_toolInputCommands.mouse_Y = 0;
 	m_toolInputCommands.mouse_LB_Down = false;
 	m_toolInputCommands.mouse_LB_Up = false;
 	m_toolInputCommands.mouse_LB_DoubleClickTime = 0.0f;
+
 	m_toolInputCommands.mode_terrainEditor = false;
+	m_toolInputCommands.completeCineCam = false;
+	m_toolInputCommands.createCineCam = false;
+	m_toolInputCommands.switchCam = false;
 }
 
 
@@ -294,6 +301,18 @@ void ToolMain::setEditor()
 
 void ToolMain::Tick(MSG *msg)
 {
+	//if (m_toolInputCommands.createCineCam) {
+		//m_toolInputCommands.createCineCam = false;
+
+//		m_d3dRenderer.m_CameraManager->addCinematicCam();
+	//}
+	//m_toolInputCommands.createCineCam = false;
+
+	//if (m_toolInputCommands.switchCam) {
+		//m_d3dRenderer.m_CameraManager->swichCamType(cine);
+//	}
+
+
 	if (m_toolInputCommands.copy) {
 		if(m_selectedObject != -1)
 			m_d3dRenderer.copyObj(m_selectedObject);
@@ -358,6 +377,8 @@ void ToolMain::Tick(MSG *msg)
 
 		if (m_toolInputCommands.mode_terrainEditor) {
 			m_d3dRenderer.chunk();
+			m_toolInputCommands.mouse_LB_Down = false;
+
 
 			if (m_toolInputCommands.mouse_LB_Up == true) {
 				m_toolInputCommands.mouse_LB_Up = false;
@@ -463,9 +484,9 @@ void ToolMain::UpdateInput(MSG * msg)
 	else m_toolInputCommands.descend = false;	
 	if (m_keyArray['N'])
 	{
-		m_toolInputCommands.mode_cineCam = true;
+		m_toolInputCommands.createCineCam = true;
 	}
-	else m_toolInputCommands.mode_cineCam = false;	
+	else m_toolInputCommands.createCineCam = false;
 	if (m_keyArray['C'])
 	{
 		m_toolInputCommands.copy = true;
@@ -475,5 +496,15 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.paste = true;
 	}
-	else m_toolInputCommands.paste = false;
+	else m_toolInputCommands.paste = false;	
+	if (m_keyArray['M'])
+	{
+		m_toolInputCommands.switchCam = true;
+	}
+	else m_toolInputCommands.switchCam = false;	
+	if (m_keyArray['B'])
+	{
+		m_toolInputCommands.completeCineCam = true;
+	}
+	else m_toolInputCommands.completeCineCam = false;
 }

@@ -19,7 +19,9 @@ struct InputCommands
 	float wireFrameDelay;
 	bool mode_terrainEditor;
 	bool mode_wireFrame;
-	bool mode_cineCam;
+	bool createCineCam;
+	bool completeCineCam;
+	bool switchCam;
 	bool copy;
 	bool paste;
 };

@@ -25,8 +25,8 @@ Game::Game()
 	m_wireFrame = false;
     m_lastID = -1;
     m_CameraManager = new CameraManager();    
-	camera = new Camera();
-    m_CameraManager->mainCamera = *camera;
+	//camera = new Camera();
+   // m_CameraManager->mainCamera = *camera;
     intpoint = { 0, 0, 0 };
 }
 
@@ -117,10 +117,12 @@ void Game::Tick(InputCommands *Input)
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer)
 {
-	camera->Update(m_InputCommands);
+    m_CameraManager->Update(m_InputCommands);
+	//camera->Update(m_InputCommands);
 
 	//apply camera vectors
-    m_view = Matrix::CreateLookAt(camera->getCamPosition(), camera->getCamLookAt(), Vector3::UnitY);
+    //m_view = Matrix::CreateLookAt(camera->getCamPosition(), camera->getCamLookAt(), Vector3::UnitY);
+    m_view = Matrix::CreateLookAt(m_CameraManager->getCamPosition(), m_CameraManager->getCamLookAt(), Vector3::UnitY);
 
 
     m_batchEffect->SetView(m_view);
@@ -218,8 +220,8 @@ void Game::Render()
     //CAMERA POSITION ON HUD
     m_sprites->Begin();
     WCHAR   Buffer[256];
-    std::wstring var = L"Cam X: " + std::to_wstring(camera->getCamPosition().x) + L"Cam Y: " + std::to_wstring(camera->getCamPosition().y) + L"Cam Z: " + std::to_wstring(camera->getCamPosition().z);
-    std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
+    std::wstring var = L"Cam X: " + std::to_wstring(m_CameraManager->getCamPosition().x) + L"Cam Y: " + std::to_wstring(m_CameraManager->getCamPosition().y) + L"Cam Z: " + std::to_wstring(m_CameraManager->getCamPosition().z);
+   // std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
     //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
     std::wstring var2 = L"Cam Pitch: " + std::to_wstring(distance) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
     //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
@@ -254,12 +256,12 @@ void Game::Clear()
 
 void Game::DoubleLClick(int i) {
     if(i != -1)
-        camera->setCamTarget(m_displayList[i].m_position, false);
+        m_CameraManager->mainCamera->setCamTarget(m_displayList[i].m_position, false);
 }
 
 void Game::TripleLClick(int i) {
     if(i != -1)
-        camera->setCamTarget(m_displayList[i].m_position, true);
+        m_CameraManager->mainCamera->setCamTarget(m_displayList[i].m_position, true);
 }
 
 void Game::chunk() {
@@ -275,11 +277,18 @@ void Game::chunk() {
     const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
     // Convert near and far source from view space to world space
-    XMVECTOR nearWorld = XMVector3TransformCoord(nearSource, XMMatrixInverse(nullptr, m_view));
-    XMVECTOR farWorld = XMVector3TransformCoord(farSource, XMMatrixInverse(nullptr, m_view));
+   // XMVECTOR nearWorld = XMVector3TransformCoord(nearSource, XMMatrixInverse(nullptr, m_view));
+    //XMVECTOR farWorld = XMVector3TransformCoord(farSource, XMMatrixInverse(nullptr, m_view));
+
+//    XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, { 1, 1, 1 }, g_XMZero, { 0, 0, 0 }, m_CameraManager->mainCamera->getCamPosition());
+
+   // XMVECTOR nearWorld = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
+//    XMVECTOR farWorld = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
 
     // Calculate direction vector of the line in world space
-    XMVECTOR lineDirection = XMVector3Normalize(farWorld - nearWorld);
+  //  XMVECTOR lineDirection = XMVector3Normalize(farWorld - nearWorld);
 
    // XMVECTOR mousePosWorld = XMVector3Unproject(mousePosScreen, 0, 0, screenWidth, screenHeight, 
      //   0.0f, 1.0f, projectionMatrix, viewMatrix, XMMatrixIdentity());
@@ -296,24 +305,24 @@ void Game::chunk() {
             //if (intersectFound)
               //  continue;
 
-            XMVECTOR lineOrigin = nearWorld - lineDirection * DirectX::SimpleMath::Vector3::Distance(camera->getCamPosition(), m_displayChunk.m_terrainGeometry[i][j].position);
+            //XMVECTOR lineOrigin = nearWorld - lineDirection * DirectX::SimpleMath::Vector3::Distance(m_CameraManager->mainCamera->getCamPosition(), m_displayChunk.m_terrainGeometry[i][j].position);
 
-            pickedDistance = LineIntersectsPlane(lineOrigin, lineDirection, m_displayChunk.m_terrainGeometry[i][j].normal, m_displayChunk.m_terrainGeometry[i][j].position);// , pickedDistance);
+            //pickedDistance = LineIntersectsPlane(lineOrigin, lineDirection, m_displayChunk.m_terrainGeometry[i][j].normal, m_displayChunk.m_terrainGeometry[i][j].position);// , pickedDistance);
 
 
-            if (pickedDistance > 0.0f) {
-                if (pickedDistance < closestDistance) {
-                    closestDistance = pickedDistance;
-                    distance = pickedDistance;
-                    closestX = i;
-                    closestY = j;
-                }
-            }
+            //if (pickedDistance > 0.0f) {
+            //    if (pickedDistance < closestDistance) {
+            //        closestDistance = pickedDistance;
+            //        distance = pickedDistance;
+            //        closestX = i;
+            //        closestY = j;
+            //    }
+            //}
 
-            if (i == 127 && j == 127) {
-                m_displayChunk.GenerateHeightmap(closestX, closestY);
-            }
-/*
+            //if (i == 127 && j == 127) {
+            //    m_displayChunk.GenerateHeightmap(closestX, closestY);
+            //}
+
             //m_terrainGeometry[i][j], m_terrainGeometry[i][j + 1], m_terrainGeometry[i + 1][j + 1], m_terrainGeometry[i + 1][j]
             const XMVECTORF32 scale = { 1, 1, 1 };
             const XMVECTORF32 translate = { m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,
@@ -324,7 +333,7 @@ void Game::chunk() {
 
             //create set the matrix of the selected object in the world based on the translation, scale and rotation.
 
-            XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, camera->getCamOrientaion(), camera->getCamPosition());
+            XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
 
             //Unproject the points on the near and far plane, with respect to the matrix we just created.
             XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
@@ -343,7 +352,7 @@ void Game::chunk() {
 
 
             //some maths magic to find the intersection point between the terrain and the mouse ray
-            Vector3 Diff = m_displayChunk.m_terrainGeometry[i][j].position - nearPoint;
+            Vector3 Diff =translate- nearPoint;
             //const float dot = Normal.Dot(Diff);
             //const float dot2 = Normal.Dot(pickingVector);
            // const Vector3 IntersectionPoint = nearPoint + lineCast * (dot / dot2);
@@ -352,23 +361,35 @@ void Game::chunk() {
             float d = Normal.Dot(Diff);
             float e = Normal.Dot(pickingVector);
 
-            if (e && !intersectFound) {
+          //  if (e && !intersectFound) {
+            //    Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
+            //    //const float distance1 = DirectX::SimpleMath::Vector3::Distance(IntersectPos, m_displayChunk.m_terrainGeometry[i][j].position);
+            //    //distance = distance1;
+            //    if (distance1 <= 5.0f && distance1 > 0.0f) {
+            //        intpoint = IntersectionPoint;
+            //        m_displayChunk.GenerateHeightmap(i, j);
+            //        intersectFound = true;
+            //    }
+            //}
+
+            if (e) {
                 Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
-                const float distance1 = DirectX::SimpleMath::Vector3::Distance(IntersectPos, m_displayChunk.m_terrainGeometry[i][j].position);
-                distance = distance1;
-                if (distance1 <= 5.0f && distance1 > 0.0f) {
-                    intpoint = IntersectionPoint;
-                    m_displayChunk.GenerateHeightmap(i, j);
-                    intersectFound = true;
+                if (IntersectionPoint.x <= 5 && IntersectionPoint.z <= 5
+                    && IntersectionPoint.x >= -5 && IntersectionPoint.z >= -5) {
+                    if (IntersectionPoint.x <= 2.5 && IntersectionPoint.z <= 2.5
+                        && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
+                        intpoint = IntersectionPoint;
+                        m_displayChunk.GenerateHeightmap(i, j);
+                    }
                 }
-            }*/
+            }
       
             //https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
         }
-       // if (intersectFound) {
-         //   intersectFound = false;
-           // break;
-        //}
+        if (intersectFound) {
+            intersectFound = false;
+            break;
+        }
     }
 }
 
@@ -680,9 +701,9 @@ void Game::pasteObj(std::vector<SceneObject>& SceneGraph)
     });
 
     //set position     
-    newDisplayObject.m_position.x = camera->getCamLookAt().x;
-    newDisplayObject.m_position.y = camera->getCamLookAt().y;
-    newDisplayObject.m_position.z = camera->getCamLookAt().z;
+    newDisplayObject.m_position.x = m_CameraManager->getCamLookAt().x;
+    newDisplayObject.m_position.y = m_CameraManager->getCamLookAt().y;
+    newDisplayObject.m_position.z = m_CameraManager->getCamLookAt().z;
 
     //setorientation
     newDisplayObject.m_orientation.x = SceneGraph.at(m_copiedID).rotX;

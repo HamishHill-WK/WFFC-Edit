@@ -116,8 +116,8 @@ void Camera::setLookAt(){
 }
 
 void Camera::getInput(InputCommands input){
-	if (m_moving)
-		return;
+	//if (m_moving)
+	//	return;
 
 	m_moving = true;
 	if (input.rotRight)

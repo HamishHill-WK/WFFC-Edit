@@ -6,7 +6,7 @@
 enum CamType {
 	main,
 	cine,
-	stat
+	still
 };
 
 
@@ -18,10 +18,15 @@ public:
 
 	void addCinematicCam();
 	void swichcam(int camNum);
-	void swichCamTyoe(int camType);
+	void swichCamType(CamType newType);
 
-	std::vector<CinematicCam> CinematicCams;
-	Camera mainCamera;
+	void Update(InputCommands input);
+
+	DirectX::SimpleMath::Vector3 getCamPosition();
+	DirectX::SimpleMath::Vector3 getCamLookAt();
+
+	std::vector<CinematicCam*> CinematicCams;
+	Camera* mainCamera;
 	
 	int currentCam;
 	CamType camType; 

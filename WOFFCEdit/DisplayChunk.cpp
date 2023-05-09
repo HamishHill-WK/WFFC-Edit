@@ -179,7 +179,9 @@ void DisplayChunk::UpdateTerrain()
 
 void DisplayChunk::GenerateHeightmap(int i, int j)
 {
-	m_terrainGeometry[i][j].position.y += 1;
+	for(int x = 0; x < 10; x++)
+		for(int y = 0; y < 10; y++)
+			m_terrainGeometry[i+x][j+y].position.y += 1;
 }
 
 void DisplayChunk::CalculateTerrainNormals()
