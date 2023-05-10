@@ -84,12 +84,10 @@ void CameraManager::swichCamType(CamType newType)
 {
 	if (newType == cine)
 		if (CinematicCams.size() == 0) {
-			camType = main;
 			return;
 		}	
 	if (newType == still)
 		if (StillCams.size() == 0) {
-			camType = main;
 			return;
 		}
 
