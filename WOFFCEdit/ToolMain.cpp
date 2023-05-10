@@ -36,6 +36,17 @@ ToolMain::ToolMain()
 	m_toolInputCommands.completeCineCam = false;
 	m_toolInputCommands.createCineCam = false;
 	m_toolInputCommands.switchCam = false;
+
+	m_toolInputCommands.objDown = false;
+	m_toolInputCommands.objUp = false;
+	m_toolInputCommands.objRight = false;
+	m_toolInputCommands.objLeft = false;
+
+	m_toolInputCommands.mode_rotate = false;
+	m_toolInputCommands.mode_translate = true;
+	m_toolInputCommands.mode_scale = false;
+	m_toolInputCommands.switchObjMode = false;
+	
 }
 
 
@@ -312,6 +323,106 @@ void ToolMain::Tick(MSG *msg)
 		//m_d3dRenderer.m_CameraManager->swichCamType(cine);
 //	}
 
+	if (m_toolInputCommands.switchObjMode) {
+		if (m_toolInputCommands.mode_translate) {
+			m_toolInputCommands.mode_translate = false;
+			m_toolInputCommands.mode_rotate = true;
+			return;
+		}		
+		if (m_toolInputCommands.mode_rotate) {
+			m_toolInputCommands.mode_rotate = false;
+			m_toolInputCommands.mode_scale = true;
+			return;
+		}		
+		if (m_toolInputCommands.mode_scale) {
+			m_toolInputCommands.mode_scale = false;
+			m_toolInputCommands.mode_translate = true;
+			return;
+		}
+		m_toolInputCommands.switchObjMode = false;
+	}
+
+	if (m_selectedObject != -1) {
+		if (m_toolInputCommands.objUp) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posY += .1f;	
+			
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotY += 1.f;			
+			
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaY += .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+
+		}
+		
+		if (m_toolInputCommands.objDown) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posY -= .1f;
+
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotY -= 1.f;
+
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaY -= .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		}		
+		
+		if (m_toolInputCommands.objForward) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posZ += .1f;
+
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotZ += 1.f;
+
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaZ += .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		}	
+
+		if (m_toolInputCommands.objBack) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posZ -= .1f;
+
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotZ -= 1.f;
+
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaZ -= .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		}		
+		
+		if (m_toolInputCommands.objRight) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posX += .1f;
+
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotX += 1.f;
+
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaX += .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		}	
+
+		if (m_toolInputCommands.objLeft) {
+			if (m_toolInputCommands.mode_translate)
+				m_sceneGraph.at(m_selectedObject).posX -= .1f;
+
+			if (m_toolInputCommands.mode_rotate)
+				m_sceneGraph.at(m_selectedObject).rotX -= 1.f;
+
+			if (m_toolInputCommands.mode_scale)
+				m_sceneGraph.at(m_selectedObject).scaX -= .1f;
+
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+		}
+	}
+
 
 	if (m_toolInputCommands.copy) {
 		if(m_selectedObject != -1)
@@ -506,5 +617,40 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.completeCineCam = true;
 	}
-	else m_toolInputCommands.completeCineCam = false;
+	else m_toolInputCommands.completeCineCam = false;	
+	if (m_keyArray['I'])
+	{
+		m_toolInputCommands.objUp = true;
+	}
+	else m_toolInputCommands.objUp = false;	
+	if (m_keyArray['K'])
+	{
+		m_toolInputCommands.objDown = true;
+	}
+	else m_toolInputCommands.objDown = false;	
+	if (m_keyArray['J'])
+	{
+		m_toolInputCommands.objLeft = true;
+	}
+	else m_toolInputCommands.objLeft = false;
+	if (m_keyArray['L'])
+	{
+		m_toolInputCommands.objRight = true;
+	}
+	else m_toolInputCommands.objRight = false;
+	if (m_keyArray['U'])
+	{
+		m_toolInputCommands.objForward = true;
+	}
+	else m_toolInputCommands.objForward = false;
+	if (m_keyArray['O'])
+	{
+		m_toolInputCommands.objBack = true;
+	}
+	else m_toolInputCommands.objBack = false;	
+	if (m_keyArray['T'])
+	{
+		m_toolInputCommands.switchObjMode = true;
+	}
+	else m_toolInputCommands.switchObjMode = false;
 }

@@ -44,12 +44,12 @@ void CinematicCam::Update(InputCommands input)
 	if (tracking){// && m_moving) { //while tracking cam position and rotation updates and while the camera is moving 
 		DirectX::SimpleMath::Vector3 newPos = getCamPosition();
 		DirectX::SimpleMath::Vector3 newRot = getCamOrientaion();
-		if (!positions.empty())
-			if(positions.at(positions.size()-1) != newPos)	//check last position is different to current pos 
+		//if (!positions.empty())
+			//if(positions.at(positions.size()-1) != newPos)	//check last position is different to current pos 
 				positions.push_back(newPos);	//add pos to vector of positions 
 
-		if (!orientations.empty())
-			if (orientations.at(orientations.size()-1) != newRot)
+		//if (!orientations.empty())
+			//if (orientations.at(orientations.size()-1) != newRot)
 				orientations.push_back(newRot);
 	}
 	

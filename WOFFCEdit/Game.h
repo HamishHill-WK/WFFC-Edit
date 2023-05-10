@@ -60,6 +60,8 @@ public:
 
 	CameraManager* m_CameraManager; 
 
+	void updateObj(SceneObject objId, int obj);
+
 	void chunk();
 	int	 MousePicking();
 	void DoubleLClick(int i);

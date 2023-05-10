@@ -24,4 +24,14 @@ struct InputCommands
 	bool switchCam;
 	bool copy;
 	bool paste;
+	bool mode_rotate;
+	bool mode_translate;
+	bool mode_scale;
+	bool objUp;
+	bool objDown;
+	bool objLeft;
+	bool objRight;
+	bool objForward;
+	bool objBack;
+	bool switchObjMode;
 };
