@@ -44,7 +44,7 @@ void CinematicCam::Update(InputCommands input)
 {
 	getInput(input);
 
-	if (tracking){// && m_moving) { //while tracking cam position and rotation updates and while the camera is moving 
+	if (tracking){// //while tracking cam position and rotation updates and while the camera is moving 
 		DirectX::SimpleMath::Vector3 newPos = getCamPosition();
 		DirectX::SimpleMath::Vector3 newRot = getCamOrientaion();
 

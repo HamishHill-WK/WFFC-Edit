@@ -1,29 +1,31 @@
 #include "CameraManager.h"
 
+//class for controlling different cameras in the scene 
+
 CameraManager::CameraManager()
 {
-	mainCamera = new Camera();
+	mainCamera = new Camera();	//create the default camera 
 	currentCam = 0;
 	camType = main;
 }
 
-void CameraManager::addCinematicCam()
+void CameraManager::addCinematicCam()	//create a cinematic cam
 {
 	CinematicCam* cam = (new CinematicCam(*mainCamera));
 	CinematicCams.push_back(cam);
-	swichcam(StillCams.size()-1);
+	swichcam(StillCams.size()-1);	//view is switched to new camera 
 	swichCamType(cine);
 }
 
-void CameraManager::addStillCam()
+void CameraManager::addStillCam()	//create static camera 
 {
 	StillCamera* cam = (new StillCamera(*mainCamera));
 	StillCams.push_back(cam);
-	swichcam(StillCams.size()-1);
+	swichcam(StillCams.size()-1);	//view siwtched to new camera 
 	swichCamType(still);
 }
 
-void CameraManager::swichcam()
+void CameraManager::swichcam()	//function for cycling through cameras
 {
 	switch (camType)
 	{
@@ -47,12 +49,12 @@ void CameraManager::swichcam()
 	}
 }
 
-void CameraManager::swichcam(int camId)
+void CameraManager::swichcam(int camId)	//switch to desired camera id
 {
 	currentCam = camId;
 }
 
-void CameraManager::swichCamType()
+void CameraManager::swichCamType()	//cycle through cam types -- may be redundant now
 {
 	switch (camType)
 	{
@@ -80,21 +82,21 @@ void CameraManager::swichCamType()
 	}
 }
 
-void CameraManager::swichCamType(CamType newType)
+void CameraManager::swichCamType(CamType newType)	//switch to type passed in
 {
 	if (newType == cine)
-		if (CinematicCams.size() == 0) {
+		if (CinematicCams.size() == 0) {	//if no cinematic cams exist return
 			return;
 		}	
 	if (newType == still)
-		if (StillCams.size() == 0) {
+		if (StillCams.size() == 0) {	//if no static cams exist return 
 			return;
 		}
 
 	camType = newType;
 }
 
-void CameraManager::Update(InputCommands input)
+void CameraManager::Update(InputCommands input)	//function to pass input to the current camera
 {
 	if (input.createCamDelay > 0.0f)
 		input.createCamDelay -= .5f;
@@ -104,7 +106,7 @@ void CameraManager::Update(InputCommands input)
 	case main:
 		mainCamera->Update(input);
 		if (input.createCineCam)
-			if (input.createCamDelay <= 0.f) {
+			if (input.createCamDelay <= 0.f) {	//delay added to camera creation so it doesn't create hundreds in one press
 				addCinematicCam();
 				input.createCamDelay = 10.0f;
 			}
@@ -118,13 +120,13 @@ void CameraManager::Update(InputCommands input)
 		CinematicCams.at(currentCam)->Update(input);
 		break;
 	case still:
-		break;
+		break;	//no input passed to static cam 
 	default:
 		break;
 	}
 }
 
-DirectX::SimpleMath::Vector3 CameraManager::getCamPosition()
+DirectX::SimpleMath::Vector3 CameraManager::getCamPosition()	//returns position of the current camera
 {
 	switch (camType)
 	{
@@ -143,7 +145,7 @@ DirectX::SimpleMath::Vector3 CameraManager::getCamPosition()
 	}
 }
 
-DirectX::SimpleMath::Vector3 CameraManager::getCamLookAt()
+DirectX::SimpleMath::Vector3 CameraManager::getCamLookAt()	//returns the lookat vector of the current camera
 {
 	switch (camType)
 	{
