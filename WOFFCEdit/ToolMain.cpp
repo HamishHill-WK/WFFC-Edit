@@ -315,9 +315,10 @@ void ToolMain::switchObjMode()
 	m_toolInputCommands.switchObjMode = true; 
 }
 
-void ToolMain::switchCamMode()
+void ToolMain::switchCamMode(CamType newType)
 {
-	m_d3dRenderer.m_CameraManager->swichCamType();
+	m_d3dRenderer.m_CameraManager->swichCamType(newType);
+
 }
 
 void ToolMain::switchCamNum()
@@ -335,7 +336,7 @@ void ToolMain::Tick(MSG *msg)
 	//m_toolInputCommands.createCineCam = false;
 
 	if (m_toolInputCommands.switchCam) {
-		m_d3dRenderer.m_CameraManager->swichCamType();
+		m_d3dRenderer.m_CameraManager->swichcam();
 	}
 
 	if (m_toolInputCommands.switchObjMode) {
@@ -619,7 +620,12 @@ void ToolMain::UpdateInput(MSG * msg)
 	{
 		m_toolInputCommands.createCineCam = true;
 	}
-	else m_toolInputCommands.createCineCam = false;
+	else m_toolInputCommands.createCineCam = false;	
+	if (m_keyArray['0'])
+	{
+		m_toolInputCommands.createStillCam = true;
+	}
+	else m_toolInputCommands.createStillCam = false;
 	if (m_keyArray['C'])
 	{
 		m_toolInputCommands.copy = true;

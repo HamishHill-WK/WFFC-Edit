@@ -26,7 +26,7 @@ public: //methods
 	void	UpdateInput(MSG *msg);
 
 	void switchObjMode();
-	void switchCamMode();
+	void switchCamMode(CamType newType);
 	void switchCamNum();
 
 public:	//variables

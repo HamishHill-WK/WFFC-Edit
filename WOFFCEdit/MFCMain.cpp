@@ -9,8 +9,10 @@ BEGIN_MESSAGE_MAP(MFCMain, CWinApp)
 	ON_COMMAND(ID_BUTTON40001,	&MFCMain::ToolBarButton1)
 	ON_COMMAND(ID_BUTTON40006, &MFCMain::TerrainEditor)
 	ON_COMMAND(ID_BUTTON40007, &MFCMain::switchObjMode)
-	ON_COMMAND(ID_BUTTON40008, &MFCMain::switchCamMode)
-	ON_COMMAND(ID_BUTTON40009, &MFCMain::switchCamNum)
+	ON_COMMAND(ID_BUTTON40008, &MFCMain::switchCamNum)
+	ON_COMMAND(ID_BUTTON40009, &MFCMain::switchCamModeCine)
+	ON_COMMAND(ID_BUTTON40011, &MFCMain::switchCamModeMain)
+	ON_COMMAND(ID_BUTTON40012, &MFCMain::switchCamModeStill)
 	ON_UPDATE_COMMAND_UI(ID_INDICATOR_TOOL, &CMyFrame::OnUpdatePage)
 END_MESSAGE_MAP()
 
@@ -117,9 +119,19 @@ void MFCMain::switchObjMode()
 	m_ToolSystem.switchObjMode();
 }
 
-void MFCMain::switchCamMode()
+void MFCMain::switchCamModeMain()
 {
-	m_ToolSystem.switchCamMode();
+	m_ToolSystem.switchCamMode(main);
+}
+
+void MFCMain::switchCamModeStill()
+{
+	m_ToolSystem.switchCamMode(still);
+}
+
+void MFCMain::switchCamModeCine()
+{
+	m_ToolSystem.switchCamMode(cine);
 }
 
 void MFCMain::switchCamNum()

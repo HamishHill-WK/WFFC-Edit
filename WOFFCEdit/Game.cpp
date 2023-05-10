@@ -362,33 +362,7 @@ void Game::chunk() {
     }
 }
 
-//float Game::LineIntersectsPlane(const DirectX::SimpleMath::Vector3& lineOrigin, 
-//    const DirectX::SimpleMath::Vector3& lineDirection, 
-//    const DirectX::SimpleMath::Vector3& planeNormal, 
-//    const DirectX::SimpleMath::Vector3& planePoint)// , float& outDistance)
-//{
-//    float outDistance = 0.0f;
-//    const float dotProduct = lineDirection.Dot(planeNormal);
-//    if (fabs(dotProduct) < FLT_EPSILON)
-//    {
-//        // Line is parallel to the plane
-//        outDistance = 0.0f;
-//        return false;
-//    }
-//
-//    const float d = planePoint.Dot(planeNormal);
-//    const float t = (d - lineOrigin.Dot(planeNormal)) / dotProduct;
-//
-//    if (t < 0.0f)
-//    {
-//        // Intersection point is behind the line origin
-//        outDistance = 0.0f;
-//        return outDistance;
-//    }
-//
-//    outDistance = t;
-//    return outDistance;
-//}
+
 
 
 int Game::MousePicking()

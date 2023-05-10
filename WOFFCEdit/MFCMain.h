@@ -37,7 +37,9 @@ private:
 	afx_msg void MenuEditSelect();
 	afx_msg	void ToolBarButton1();
 	afx_msg	void switchObjMode();
-	afx_msg	void switchCamMode();
+	afx_msg	void switchCamModeMain();
+	afx_msg	void switchCamModeStill();
+	afx_msg	void switchCamModeCine();
 	afx_msg	void switchCamNum();
 	afx_msg void TerrainEditor();
 
