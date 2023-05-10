@@ -221,13 +221,33 @@ void Game::Render()
     m_sprites->Begin();
     WCHAR   Buffer[256];
     std::wstring var = L"Cam X: " + std::to_wstring(m_CameraManager->getCamPosition().x) + L"Cam Y: " + std::to_wstring(m_CameraManager->getCamPosition().y) + L"Cam Z: " + std::to_wstring(m_CameraManager->getCamPosition().z);
-   // std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
+    // std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
     //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
-    std::wstring var2 = L"Cam Pitch: " + std::to_wstring(m_InputCommands.mode_rotate) + L"intersect " + std::to_wstring(m_InputCommands.mode_translate) + L"intersect " + std::to_wstring(m_InputCommands.mode_scale);
+    //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(m_InputCommands.mode_rotate) + L"intersect " + std::to_wstring(m_InputCommands.mode_translate) + L"intersect " + std::to_wstring(m_InputCommands.mode_scale);
+    
+    std::wstring var2 = L"Default";
+    std::wstring var3 = L"Default";
+
+    if(m_InputCommands.mode_rotate)
+        var2 = L"Object Mode: Rotate";    
+    
+    if(m_InputCommands.mode_translate)
+        var2 = L"Object Mode: Translate";    
+    
+    if(m_InputCommands.mode_scale)
+        var2 = L"Object Mode: scale"; 
+
+    if (m_CameraManager->camType == main)
+        var3 = L"Current Cam: Main Camera";    
+    
+    if (m_CameraManager->camType == cine)
+        var3 = L"Current Cam: Cinematic Cam " + std::to_wstring(m_CameraManager->currentCam);
+
     //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(150, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     //m_font->DrawString(m_sprites.get(), var1.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(150, 60), Colors::Red, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
     m_sprites->End();
 
     m_deviceResources->Present();

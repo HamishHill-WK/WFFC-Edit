@@ -17,8 +17,8 @@ public:
 	~CameraManager();
 
 	void addCinematicCam();
-	void swichcam(int camNum);
-	void swichCamType(CamType newType);
+	void swichcam();
+	void swichCamType();
 
 	void Update(InputCommands input);
 
@@ -30,5 +30,6 @@ public:
 	
 	int currentCam;
 	CamType camType; 
+
 };
 

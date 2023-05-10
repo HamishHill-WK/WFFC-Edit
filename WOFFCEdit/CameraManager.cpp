@@ -7,31 +7,46 @@ CameraManager::CameraManager()
 	camType = main;
 }
 
-
-
 void CameraManager::addCinematicCam()
 {
 	CinematicCam* cam = (new CinematicCam(*mainCamera));
 	CinematicCams.push_back(cam);
-	swichcam(currentCam);
-	swichCamType(cine);
+	swichcam();
+	swichCamType();
 }
 
-void CameraManager::swichcam(int camNum)
+void CameraManager::swichcam()
 {
-	currentCam = camNum;
-}
-
-void CameraManager::swichCamType(CamType newType)
-{
-	camType = newType;
-	/*switch (camType)
+	switch (camType)
 	{
 	case main:
+		currentCam = 0;
+		break;
+	case cine:
+		if (currentCam < CinematicCams.size())
+			currentCam++;
+		else if (currentCam >= CinematicCams.size())
+			currentCam = 0;
+		break;
+	case still:
+		break;
+	default:
+		break;
+	}
+}
+
+void CameraManager::swichCamType()
+{
+	switch (camType)
+	{
+	case main:
+		if (CinematicCams.size() == 0)
+			addCinematicCam();
+
 		camType = cine;
 		break;
 	case cine:
-		camType = still;
+		camType = main;
 		break;
 	case still:
 		camType = main;
@@ -39,7 +54,7 @@ void CameraManager::swichCamType(CamType newType)
 	default:
 		camType = main;
 		break;
-	}*/
+	}
 }
 
 void CameraManager::Update(InputCommands input)

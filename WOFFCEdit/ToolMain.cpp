@@ -310,6 +310,21 @@ void ToolMain::setEditor()
 	m_toolInputCommands.mode_terrainEditor = !m_toolInputCommands.mode_terrainEditor;
 }
 
+void ToolMain::switchObjMode()
+{
+	m_toolInputCommands.switchObjMode = true; 
+}
+
+void ToolMain::switchCamMode()
+{
+	m_d3dRenderer.m_CameraManager->swichCamType();
+}
+
+void ToolMain::switchCamNum()
+{
+	m_d3dRenderer.m_CameraManager->swichcam();
+}
+
 void ToolMain::Tick(MSG *msg)
 {
 	//if (m_toolInputCommands.createCineCam) {
@@ -319,11 +334,12 @@ void ToolMain::Tick(MSG *msg)
 	//}
 	//m_toolInputCommands.createCineCam = false;
 
-	//if (m_toolInputCommands.switchCam) {
-		//m_d3dRenderer.m_CameraManager->swichCamType(cine);
-//	}
+	if (m_toolInputCommands.switchCam) {
+		m_d3dRenderer.m_CameraManager->swichCamType();
+	}
 
 	if (m_toolInputCommands.switchObjMode) {
+		m_toolInputCommands.switchObjMode = false;
 		if (m_toolInputCommands.mode_translate) {
 			m_toolInputCommands.mode_translate = false;
 			m_toolInputCommands.mode_rotate = true;
@@ -339,7 +355,7 @@ void ToolMain::Tick(MSG *msg)
 			m_toolInputCommands.mode_translate = true;
 			return;
 		}
-		m_toolInputCommands.switchObjMode = false;
+		//m_toolInputCommands.switchObjMode = false;
 	}
 
 	if (m_selectedObject != -1) {
@@ -648,9 +664,9 @@ void ToolMain::UpdateInput(MSG * msg)
 		m_toolInputCommands.objBack = true;
 	}
 	else m_toolInputCommands.objBack = false;	
-	if (m_keyArray['T'])
-	{
-		m_toolInputCommands.switchObjMode = true;
-	}
-	else m_toolInputCommands.switchObjMode = false;
+//	if (m_keyArray['T'])
+	//{
+		//m_toolInputCommands.switchObjMode = true;
+	//}
+	//else m_toolInputCommands.switchObjMode = false;
 }
