@@ -358,96 +358,102 @@ void ToolMain::Tick(MSG *msg)
 		//m_toolInputCommands.switchObjMode = false;
 	}
 
-	if (m_selectedObject != -1) {
+	if (m_d3dRenderer.m_lastID != -1) {
 		if (m_toolInputCommands.objUp) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posY += .1f;	
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posY += .1f;
 			
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotY += 1.f;			
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotY += 1.f;
 			
 			if (m_toolInputCommands.mode_scale)
-				m_sceneGraph.at(m_selectedObject).scaY += .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).scaY += .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 
 		}
 		
 		if (m_toolInputCommands.objDown) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posY -= .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posY -= .1f;
 
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotY -= 1.f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotY -= 1.f;
 
 			if (m_toolInputCommands.mode_scale)
 				m_sceneGraph.at(m_selectedObject).scaY -= .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}		
 		
 		if (m_toolInputCommands.objForward) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posZ += .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posZ += .1f;
 
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotZ += 1.f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotZ += 1.f;
 
 			if (m_toolInputCommands.mode_scale)
-				m_sceneGraph.at(m_selectedObject).scaZ += .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).scaZ += .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}	
 
 		if (m_toolInputCommands.objBack) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posZ -= .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posZ -= .1f;
 
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotZ -= 1.f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotZ -= 1.f;
 
 			if (m_toolInputCommands.mode_scale)
-				m_sceneGraph.at(m_selectedObject).scaZ -= .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).scaZ -= .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}		
 		
 		if (m_toolInputCommands.objRight) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posX += .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posX += .1f;
 
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotX += 1.f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotX += 1.f;
 
 			if (m_toolInputCommands.mode_scale)
-				m_sceneGraph.at(m_selectedObject).scaX += .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).scaX += .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}	
 
 		if (m_toolInputCommands.objLeft) {
 			if (m_toolInputCommands.mode_translate)
-				m_sceneGraph.at(m_selectedObject).posX -= .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).posX -= .1f;
 
 			if (m_toolInputCommands.mode_rotate)
-				m_sceneGraph.at(m_selectedObject).rotX -= 1.f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).rotX -= 1.f;
 
 			if (m_toolInputCommands.mode_scale)
-				m_sceneGraph.at(m_selectedObject).scaX -= .1f;
+				m_sceneGraph.at(m_d3dRenderer.m_lastID).scaX -= .1f;
 
-			m_d3dRenderer.updateObj(m_sceneGraph.at(m_selectedObject), m_selectedObject);
+			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}
 	}
 
 
 	if (m_toolInputCommands.copy) {
+		m_toolInputCommands.copy = false;
 		if(m_selectedObject != -1)
 			m_d3dRenderer.copyObj(m_selectedObject);
 	}
 
 	if (m_toolInputCommands.paste) {
-		m_d3dRenderer.pasteObj(m_sceneGraph);
+		if (m_toolInputCommands.pasteDelay <= 0.0f) {
+			m_d3dRenderer.pasteObj(m_sceneGraph);
+			m_toolInputCommands.pasteDelay = 10.0f;
+		}
 	}
+	if (m_toolInputCommands.pasteDelay > 0.0f)
+		m_toolInputCommands.pasteDelay -= 0.5f;
 
 	if (m_toolInputCommands.mode_wireFrame) {
 		if (m_toolInputCommands.wireFrameDelay <= 0.0f) {

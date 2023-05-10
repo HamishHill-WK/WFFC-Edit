@@ -17,6 +17,7 @@ struct InputCommands
 	bool mouse_LB_Down;bool mouse_LB_Up;
 	float mouse_LB_DoubleClickTime;
 	float wireFrameDelay;
+	float pasteDelay;
 	bool mode_terrainEditor;
 	bool mode_wireFrame;
 	bool createCineCam;
