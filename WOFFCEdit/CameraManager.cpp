@@ -13,7 +13,7 @@ void CameraManager::addCinematicCam()	//create a cinematic cam
 {
 	CinematicCam* cam = (new CinematicCam(*mainCamera));
 	CinematicCams.push_back(cam);
-	swichcam(StillCams.size()-1);	//view is switched to new camera 
+	swichcam(CinematicCams.size()-1);	//view is switched to new camera 
 	swichCamType(cine);
 }
 

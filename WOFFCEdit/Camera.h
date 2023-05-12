@@ -41,4 +41,3 @@ protected:
 	void setPos(DirectX::SimpleMath::Vector3);
 	void setRot(DirectX::SimpleMath::Vector3);
 };
-
