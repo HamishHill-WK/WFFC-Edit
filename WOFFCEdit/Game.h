@@ -35,7 +35,7 @@ public:
 
 	// Rendering helpers
 	void Clear();
-
+	std::wstring TruncateFloatToString(float value);
 	// IDeviceNotify
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;

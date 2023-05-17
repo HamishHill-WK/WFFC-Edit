@@ -1,12 +1,19 @@
 #include "CameraManager.h"
-
 //class for controlling different cameras in the scene 
 
 CameraManager::CameraManager()
 {
+	//emptyBinaryFile();
+
 	mainCamera = new Camera();	//create the default camera 
 	currentCam = 0;
 	camType = main;
+	loadBinary();
+}
+
+CameraManager::~CameraManager()
+{
+	saveToBinary();	// cinematic and still cams vectors saved on deconstruction
 }
 
 void CameraManager::addCinematicCam()	//create a cinematic cam
@@ -162,4 +169,85 @@ DirectX::SimpleMath::Vector3 CameraManager::getCamLookAt()	//returns the lookat 
 		return { 0,0,0 };
 		break;
 	}
+}
+
+
+void CameraManager::loadBinary()
+{
+	std::ifstream file("CineCams.bin", std::ios::binary);
+	if (!file) return;
+
+	std::ifstream file1("StillCams.bin", std::ios::binary);
+	if (!file1) return;
+
+	// Read the size of the vector
+	size_t size;
+	file.read(reinterpret_cast<char*>(&size), sizeof(size));
+
+	if (size < MAXSSIZE_T)
+		// Read each 3D vector
+		for (size_t j = 0; j < size; ++j) {
+			CinematicCam* element = new CinematicCam(Camera());
+			element->deserialize1(file);
+			CinematicCams.push_back(element);
+		}
+
+	file.close();
+
+	// Read the size of the vector
+	size_t size1;
+	file1.read(reinterpret_cast<char*>(&size1), sizeof(size1));
+
+	if (size1 < MAXSSIZE_T)
+		// Read each 3D vector
+		for (size_t j = 0; j < size1; ++j) {
+			StillCamera* element = new StillCamera(Camera());
+			element->deserialize(file1);
+			StillCams.push_back(element);
+		}
+
+	file1.close();
+}
+
+void CameraManager::saveToBinary()
+{	//vectors are saved in seperate files to allow for modularity 
+	std::ofstream file("CineCams.bin", std::ios::binary);
+	if (!file) return; // if binary file could not be accessed return
+
+	size_t vectorCount = CinematicCams.size();
+	if (vectorCount < MAXSSIZE_T) {
+		file.write(reinterpret_cast<const char*>(&vectorCount), sizeof(vectorCount));
+
+		// Write each 3D vector to the file
+		for (const auto& vector : CinematicCams) {
+			vector->serialize1(file);
+		}
+	}
+	file.close();
+
+	std::ofstream file1("StillCams.bin", std::ios::binary);
+	if (!file1) return;  // if binary file could not be accessed return
+
+	if (vectorCount < MAXSSIZE_T) {
+		size_t vectorCount1 = StillCams.size();
+		file1.write(reinterpret_cast<const char*>(&vectorCount1), sizeof(vectorCount1));
+
+		for (const auto& vector1 : StillCams) {
+			vector1->serialize(file1);
+		}
+	}
+
+	file1.close();
+}
+
+void CameraManager::emptyBinaryFile()	//debug function for clearing binary file 
+{
+	//std::ofstream file("StillCams.bin", std::ios::binary | std::ios::trunc);
+	//if (!file) return;
+
+	//file.close();
+
+	std::ofstream file1("CineCams.bin", std::ios::binary | std::ios::trunc);
+	if (!file1) return;
+	file1.close();
 }

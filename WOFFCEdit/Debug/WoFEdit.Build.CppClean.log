@@ -1,7 +1,6 @@
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\vc143.pdb
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\vc143.idb
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\toolmain.obj
-c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\terraindialogue.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\selectdialogue.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\sceneobject.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\mfcmain.obj
@@ -13,14 +12,18 @@ c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\game.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\displayobject.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\displaychunk.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\deviceresources.obj
-c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\cinematiccam.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\chunkobject.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\camera.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\sqlite3.obj
+c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\terraindialogue.obj
+c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\stillcamera.obj
+c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\cinematiccam.obj
+c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\cameramanager.obj
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.exe
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.ilk
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.pdb
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\win32simplesample.res
+c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\toolmain.obj.enc
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.tlog\cl.command.1.tlog
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.tlog\cl.read.1.tlog
 c:\users\hamis\androidstudioprojects\wffc-edit\woffcedit\debug\wofedit.tlog\cl.write.1.tlog

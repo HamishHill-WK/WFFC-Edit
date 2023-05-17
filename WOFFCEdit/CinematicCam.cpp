@@ -1,14 +1,20 @@
 #include "CinematicCam.h"
 
+
 CinematicCam::CinematicCam(Camera cam)
 {
+	infocus = false;
+	tracking = true;
+	totalPos = 0;
+	totalRotation = 0;
+	currentPos = 0;
+	currentRot = 0;
 	setPos(cam.getCamPosition());
 	setRot(cam.getCamOrientaion());
 	setLookAt();
 	positions.push_back(cam.getCamPosition()); //first position of camera added on creation 
 	orientations.push_back(cam.getCamOrientaion()); //first position of camera added on creation 
-	infocus = false;
-	tracking = true;
+	
 }
 
 void CinematicCam::getInput(InputCommands input)
