@@ -330,67 +330,229 @@ void Game::updateObj(SceneObject objId, int obj)
     m_displayList.at(obj).m_scale.z = objId.scaZ;
 }
 
-void Game::chunk() {
-    int selectedID = -1;
-    float pickedDistance = 0;
-    float closestDistance = FLT_MAX;
-    int closestX = 0;
-    int closestY = 0;
+////setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
+//const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+//const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+//
+////Unproject the points on the near and far plane
+//const XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+//const XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+//
+////get the line cast from the mouse
+//const XMVECTOR lineCast = XMVector3Normalize(farPoint - nearPoint);
+//
+//closestTerrainDist = FLT_MAX;
+//closestTerrainIntersection = Vector3(FLT_MAX);
+////loop through quads to check for line intersection
+//for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)
+//{
+//    for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)
+//    {
+//        XMVECTOR v1 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j].position);
+//        XMVECTOR v2 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j + 1].position);
+//        XMVECTOR v3 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
+//        XMVECTOR v4 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j].position);
+//
+//        //get plane from vertices
+//        XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
+//        float d = -XMVectorGetX(XMVector3Dot(normal, v1));
+//        XMVECTOR plane = XMVectorSetW(normal, d);
+//
+//        //get intersection point
+//        XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
+//
+//        if (!XMVector3Equal(intersects, XMVectorZero()))
+//        {
+//            //convert intersection point to vector3
+//            Vector3 point;
+//            XMStoreFloat3(&point, intersects);
+//
+//            // check if the point is inside the quad
+//            if (point.x >= std::min(XMVectorGetX(v1), XMVectorGetX(v2)) && point.x <= std::max(XMVectorGetX(v1), XMVectorGetX(v2)) &&
+//                point.z >= std::min(XMVectorGetZ(v1), XMVectorGetZ(v4)) && point.z <= std::max(XMVectorGetZ(v1), XMVectorGetZ(v4)))
+//            {
+//                //check if the distance is closer than the previous closest
+//                float distance = Vector3::Distance(point, m_camera.m_position);
+//                if (distance < closestTerrainDist)
+//                {
+//                    //store point of intersection
+//                    closestTerrainIntersection = point;
+//                    closestTerrainDist = distance;
+//                }
+//            }
+//        }
+//
+//    }
+//}
+//
+////loop through vertices and check if they are within a certain radius of the intersection point
+//for (int i = 0; i < 128; i++)
+//{
+//    for (int j = 0; j < 128; j++)
+//    {
+//        //get distance between vertex and intersection point (ignoring y axis)
+//        const float distance = Vector3::Distance(Vector3(closestTerrainIntersection.x, 0, closestTerrainIntersection.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
+//        if (distance < outerRadius)
+//        {
+//            //if vertex is within radius, raise or lower it depending on direction, outer radius also factors in distance from intersection point
+//            if (distance < innerRadius)
+//                m_displayChunk.m_terrainGeometry[i][j].position.y += 0.5f * m_InputCommands.terrainDirection;
+//            else
+//            {
+//                const float falloff = 1 - ((distance - innerRadius) / (outerRadius - innerRadius));
+//                m_displayChunk.m_terrainGeometry[i][j].position.y += 0.5f * m_InputCommands.terrainDirection * falloff;
+//            }
+//            //keep vertex within bounds of height map
+//            m_displayChunk.m_terrainGeometry[i][j].position.y = std::max(0.f, m_displayChunk.m_terrainGeometry[i][j].position.y);
+//            m_displayChunk.m_terrainGeometry[i][j].position.y = std::min(63.f, m_displayChunk.m_terrainGeometry[i][j].position.y);
+//        }
+//    }
+//}
+//```
 
-    //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
-        //they may look the same but note, the difference in Z
+void Game::chunk() {
+
+    
+        //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
     const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
     const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
 
-    bool intersectFound = false;
+    //Unproject the points on the near and far plane
+    const XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+    const XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, m_world);
+
+    //get the line cast from the mouse
+    const XMVECTOR lineCast = XMVector3Normalize(farPoint - nearPoint);
+
+    float closestTerrainDist = FLT_MAX;
+    DirectX::SimpleMath::Vector3 closestTerrainIntersection = Vector3(FLT_MAX);
+    //loop through quads to check for line intersection
+    for (size_t i = 0; i < TERRAINRESOLUTION - 1; i++)
+    {
+        for (size_t j = 0; j < TERRAINRESOLUTION - 1; j++)
+        {
+            XMVECTOR v1 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j].position);
+            XMVECTOR v2 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i][j + 1].position);
+            XMVECTOR v3 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j + 1].position);
+            XMVECTOR v4 = XMLoadFloat3(&m_displayChunk.m_terrainGeometry[i + 1][j].position);
+
+            //get plane from vertices
+            XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
+            float d = -XMVectorGetX(XMVector3Dot(normal, v1));
+            XMVECTOR plane = XMVectorSetW(normal, d);
+
+            //get intersection point
+            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
+
+            if (!XMVector3Equal(intersects, XMVectorZero()))
+            {
+                //convert intersection point to vector3
+                Vector3 point;
+                XMStoreFloat3(&point, intersects);
+
+                // check if the point is inside the quad
+                if (point.x >= std::min(XMVectorGetX(v1), XMVectorGetX(v2)) && point.x <= std::max(XMVectorGetX(v1), XMVectorGetX(v2)) &&
+                    point.z >= std::min(XMVectorGetZ(v1), XMVectorGetZ(v4)) && point.z <= std::max(XMVectorGetZ(v1), XMVectorGetZ(v4)))
+                {
+                    //check if the distance is closer than the previous closest
+                    float distance = Vector3::Distance(point, m_CameraManager->getCamPosition());
+                    if (distance < closestTerrainDist)
+                    {
+                        //store point of intersection
+                        closestTerrainIntersection = point;
+                        closestTerrainDist = distance;
+                    }
+                }
+            }
+
+        }
+    }
+
+    //loop through vertices and check if they are within a certain radius of the intersection point
     for (int i = 0; i < 128; i++)
     {
         for (int j = 0; j < 128; j++)
         {
-            const XMVECTORF32 scale = { 1, 1, 1 };
-            const XMVECTORF32 translate = { m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,
-               m_displayChunk.m_terrainGeometry[i][j].position.z };
-
-            //convert euler angles into a quaternion for the rotation of the object
-            XMVECTOR rotate = Vector3(0, 0, 0);
-
-            //create set the matrix of the selected object in the world based on the translation, scale and rotation.
-
-            XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
-
-            //Unproject the points on the near and far plane, with respect to the matrix we just created.
-            XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
-
-            XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
-
-            ////turn the transformed points into our picking vector. 
-            Vector3 Normal, IntersectPos;
-
-            Normal = m_displayChunk.m_terrainGeometry[i][j].normal;
-
-            XMVECTOR pickingVector = farPoint - nearPoint;
-            pickingVector = XMVector3Normalize(pickingVector);
-            Vector3 Diff = translate - nearPoint;
-            float d = Normal.Dot(Diff);
-            float e = Normal.Dot(pickingVector);
-
-            if (e) {
-                Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
-                if (IntersectionPoint.x <= 5 && IntersectionPoint.z <= 5
-                    && IntersectionPoint.x >= -5 && IntersectionPoint.z >= -5) {
-                    if (IntersectionPoint.x <= 2.5 && IntersectionPoint.z <= 2.5
-                        && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
-                        intpoint = IntersectionPoint;
-                        m_displayChunk.GenerateHeightmap(i, j);
-                    }
+            //get distance between vertex and intersection point (ignoring y axis)
+            const float distance = Vector3::Distance(Vector3(closestTerrainIntersection.x, 0, closestTerrainIntersection.z), Vector3(m_displayChunk.m_terrainGeometry[i][j].position.x, 0, m_displayChunk.m_terrainGeometry[i][j].position.z));
+            if (distance < 15)
+            {
+                //if vertex is within radius, raise or lower it depending on direction, outer radius also factors in distance from intersection point
+                if (distance < 10)
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.5f;//* m_InputCommands.terrainDirection;
+                else
+                {
+                    const float falloff = 1 - ((distance - 10) / (15 - 10));
+                    m_displayChunk.m_terrainGeometry[i][j].position.y += 0.5f * falloff;
                 }
-            }      
-        }
-        if (intersectFound) {
-            intersectFound = false;
-            break;
+                //keep vertex within bounds of height map
+                m_displayChunk.m_terrainGeometry[i][j].position.y = std::max(0.f, m_displayChunk.m_terrainGeometry[i][j].position.y);
+                m_displayChunk.m_terrainGeometry[i][j].position.y = std::min(63.f, m_displayChunk.m_terrainGeometry[i][j].position.y);
+            }
         }
     }
+    
+
+    //int selectedID = -1;
+    //float pickedDistance = 0;
+    //float closestDistance = FLT_MAX;
+    //int closestX = 0;
+    //int closestY = 0;
+
+    ////setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain. 
+    //    //they may look the same but note, the difference in Z
+    //const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
+    //const XMVECTOR farSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 1.0f, 1.0f);
+
+    //bool intersectFound = false;
+    //for (int i = 0; i < 128; i++)
+    //{
+    //    for (int j = 0; j < 128; j++)
+    //    {
+    //        const XMVECTORF32 scale = { 1, 1, 1 };
+    //        const XMVECTORF32 translate = { m_displayChunk.m_terrainGeometry[i][j].position.x, m_displayChunk.m_terrainGeometry[i][j].position.y,
+    //           m_displayChunk.m_terrainGeometry[i][j].position.z };
+
+    //        //convert euler angles into a quaternion for the rotation of the object
+    //        XMVECTOR rotate = Vector3(0, 0, 0);
+
+    //        //create set the matrix of the selected object in the world based on the translation, scale and rotation.
+
+    //        XMMATRIX local = m_world * XMMatrixTransformation(g_XMZero, Quaternion::Identity, scale, g_XMZero, rotate, translate);
+
+    //        //Unproject the points on the near and far plane, with respect to the matrix we just created.
+    //        XMVECTOR nearPoint = XMVector3Unproject(nearSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
+    //        XMVECTOR farPoint = XMVector3Unproject(farSource, 0.0f, 0.0f, m_ScreenDimensions.right, m_ScreenDimensions.bottom, m_deviceResources->GetScreenViewport().MinDepth, m_deviceResources->GetScreenViewport().MaxDepth, m_projection, m_view, local);
+
+    //        ////turn the transformed points into our picking vector. 
+    //        Vector3 Normal, IntersectPos;
+
+    //        Normal = m_displayChunk.m_terrainGeometry[i][j].normal;
+
+    //        XMVECTOR pickingVector = farPoint - nearPoint;
+    //        pickingVector = XMVector3Normalize(pickingVector);
+    //        Vector3 Diff = translate - nearPoint;
+    //        float d = Normal.Dot(Diff);
+    //        float e = Normal.Dot(pickingVector);
+
+    //        if (e) {
+    //            Vector3 IntersectionPoint = nearPoint + pickingVector * d / e;
+    //            if (IntersectionPoint.x <= 5 && IntersectionPoint.z <= 5
+    //                && IntersectionPoint.x >= -5 && IntersectionPoint.z >= -5) {
+    //                if (IntersectionPoint.x <= 2.5 && IntersectionPoint.z <= 2.5
+    //                    && IntersectionPoint.x >= -2.5 && IntersectionPoint.z >= -2.5) {
+    //                    intpoint = IntersectionPoint;
+    //                    m_displayChunk.GenerateHeightmap(i, j);
+    //                }
+    //            }
+    //        }      
+    //    }
+    //    if (intersectFound) {
+    //        intersectFound = false;
+    //        break;
+    //    }
+    //}
 }
 
 

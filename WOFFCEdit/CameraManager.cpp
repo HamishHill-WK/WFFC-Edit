@@ -188,6 +188,8 @@ void CameraManager::loadBinary()
 		for (size_t j = 0; j < size; ++j) {
 			CinematicCam* element = new CinematicCam(Camera());
 			element->deserialize1(file);
+			element->tracking = false;
+			element->playBack();
 			CinematicCams.push_back(element);
 		}
 

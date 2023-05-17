@@ -1,6 +1,5 @@
 #include "CinematicCam.h"
 
-
 CinematicCam::CinematicCam(Camera cam)
 {
 	infocus = false;
@@ -14,7 +13,6 @@ CinematicCam::CinematicCam(Camera cam)
 	setLookAt();
 	positions.push_back(cam.getCamPosition()); //first position of camera added on creation 
 	orientations.push_back(cam.getCamOrientaion()); //first position of camera added on creation 
-	
 }
 
 void CinematicCam::getInput(InputCommands input)
