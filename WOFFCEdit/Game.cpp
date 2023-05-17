@@ -221,7 +221,7 @@ void Game::Render()
     //CAMERA POSITION ON HUD
     m_sprites->Begin();
     WCHAR   Buffer[256];
-    std::wstring var = L"Cam X: " + TruncateFloatToString(m_CameraManager->getCamPosition().x) + L"Cam Y: " + TruncateFloatToString(m_CameraManager->getCamPosition().y) + L"Cam Z: " + TruncateFloatToString(m_CameraManager->getCamPosition().z);
+    std::wstring var = L"Cam X: " + TruncateFloatToString(m_CameraManager->getCamPosition().x) + L" Cam Y: " + TruncateFloatToString(m_CameraManager->getCamPosition().y) + L" Cam Z: " + TruncateFloatToString(m_CameraManager->getCamPosition().z);
     // std::wstring var1 = L"Cam Pitch: " + std::to_wstring(camera->getCamOrientaion().x) + L"Cam Yaw: " + std::to_wstring(camera->getCamOrientaion().y);
     //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(intpoint.x) + L"intersect " + std::to_wstring(intpoint.y) + L"intersect " + std::to_wstring(intpoint.z);
     //std::wstring var2 = L"Cam Pitch: " + std::to_wstring(m_InputCommands.mode_rotate) + L"intersect " + std::to_wstring(m_InputCommands.mode_translate) + L"intersect " + std::to_wstring(m_InputCommands.mode_scale);
@@ -247,11 +247,36 @@ void Game::Render()
     if (m_CameraManager->camType == still)
         var3 = L"Current Cam: Static Cam " + std::to_wstring(m_CameraManager->currentCam);
 
+    // Define the outline color
+    XMVECTOR outlineColor = Colors::Black;
+
+    // Set the outline offset
+    float outlineOffset = 0.75f; // Adjust this value as needed
+
+    // Draw the outline text
+    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 - outlineOffset, 10 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 + outlineOffset, 10 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 - outlineOffset, 10 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 + outlineOffset, 10 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10 - outlineOffset, 30 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10 + outlineOffset, 30 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10 - outlineOffset, 30 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10 + outlineOffset, 30 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+
+    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10 - outlineOffset, 50 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10 + outlineOffset, 50 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10 - outlineOffset, 50 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10 + outlineOffset, 50 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+
+
+    // Draw the main text
+
     //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
-    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
     //m_font->DrawString(m_sprites.get(), var1.c_str(), XMFLOAT2(150, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
-    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10, 30), Colors::Green, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
-    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10, 60), Colors::Red, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(1.0f, 1.0f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10, 30), Colors::Ivory, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
+    m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10, 50), Colors::Red, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(0.75f, 0.75f), SpriteEffects_None, .0f);
     m_sprites->End();
 
     m_deviceResources->Present();
