@@ -42,6 +42,4 @@ public:
 	
 	int currentCam;
 	CamType camType; 
-
 };
-

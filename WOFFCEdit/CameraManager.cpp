@@ -171,7 +171,6 @@ DirectX::SimpleMath::Vector3 CameraManager::getCamLookAt()	//returns the lookat 
 	}
 }
 
-
 void CameraManager::loadBinary()
 {
 	std::ifstream file("CineCams.bin", std::ios::binary);

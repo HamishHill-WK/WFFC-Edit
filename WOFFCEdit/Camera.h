@@ -65,8 +65,6 @@ protected:
 	DirectX::SimpleMath::Vector3		m_camTargetPos;
 	bool								m_moving; 
 	bool								m_movingTo; 
-	
-
 
 	void setPos(DirectX::SimpleMath::Vector3);
 	void setRot(DirectX::SimpleMath::Vector3);
