@@ -25,8 +25,7 @@ Game::Game()
 	m_wireFrame = false;
     m_lastID = -1;
     m_CameraManager = new CameraManager();    
-	//camera = new Camera();
-   // m_CameraManager->mainCamera = *camera;
+
     intpoint = { 0, 0, 0 };
 }
 
@@ -242,7 +241,7 @@ void Game::Render()
     // Set the outline offset
     float outlineOffset = 0.75f; // Adjust this value as needed
     float scale = 0.9f;
-    // Draw the outline text
+    // Lines 245-258 draw black outlines around the strings rendered in the camera view
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 - outlineOffset, 10 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 + outlineOffset, 10 - outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10 - outlineOffset, 10 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
@@ -259,7 +258,6 @@ void Game::Render()
     m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10 + outlineOffset, 50 + outlineOffset), outlineColor, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
 
 
-    //m_sprites->Draw(m_texture1.Get(), XMFLOAT2(0, 0), Colors::Yellow);
     m_font->DrawString(m_sprites.get(), var.c_str(), XMFLOAT2(10, 10), Colors::Yellow, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var3.c_str(), XMFLOAT2(10, 30), Colors::Orange, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
     m_font->DrawString(m_sprites.get(), var2.c_str(), XMFLOAT2(10, 50), Colors::Red, 0.0f, XMFLOAT2(0.0f, 0.0f), XMFLOAT2(scale, scale), SpriteEffects_None, .0f);
@@ -308,6 +306,7 @@ void Game::TripleLClick(int i) {
         m_CameraManager->mainCamera->setCamTarget(m_displayList[i].m_position, true);
 }
 
+//this function updates the object passed through with new data from scene graph. used for object manipulation 
 void Game::updateObj(SceneObject objId, int obj)
 {
     m_displayList.at(obj).m_position.x = objId.posX;
@@ -323,6 +322,7 @@ void Game::updateObj(SceneObject objId, int obj)
     m_displayList.at(obj).m_scale.z = objId.scaZ;
 }
 
+//terrain raising function 
 void Game::chunk() {
     //setup near and far planes of frustum with mouse X and mouse y passed down from Toolmain.
     const XMVECTOR nearSource = XMVectorSet(m_InputCommands.mouse_X, m_InputCommands.mouse_Y, 0.0f, 1.0f);
@@ -349,9 +349,9 @@ void Game::chunk() {
 
             XMVECTOR normal = XMVector3Normalize(XMVector3Cross(v2 - v1, v3 - v1));
             float d = -XMVectorGetX(XMVector3Dot(normal, v1));
-            XMVECTOR plane = XMVectorSetW(normal, d);
+            XMVECTOR plane = XMVectorSetW(normal, d);   //create plane from positisons 
 
-            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint);
+            XMVECTOR intersects = XMPlaneIntersectLine(plane, nearPoint, farPoint); //find intersection
 
             if (!XMVector3Equal(intersects, XMVectorZero()))
             {
@@ -365,14 +365,15 @@ void Game::chunk() {
                     if (distance < closestTerrainDist)
                     {
                         closestTerrainIntersection = point;
-                        closestTerrainDist = distance;
+                        closestTerrainDist = distance;  //determine if intersection is closest one found, if so store it 
                     }
                 }
             }
 
         }
     }
-
+       
+    //check which polygon contains closest point and raise geoemtry
     for (int i = 0; i < 128; i++)
     {
         for (int j = 0; j < 128; j++)
@@ -438,12 +439,13 @@ int Game::MousePicking()
                     closestDistance = pickedDistance;
 
                     selectedID = i;
+                    //highlight object 
                     m_displayList[selectedID].m_model->UpdateEffects([&](IEffect* effect) {
                         auto highlight = dynamic_cast<IEffectFog*>(effect);
                         if (highlight) {
-                            highlight->SetFogEnabled(true); highlight->SetFogStart(0); highlight->SetFogEnd(0);  highlight->SetFogColor(Colors::Red);}  //highlight
+                            highlight->SetFogEnabled(true); highlight->SetFogStart(0); highlight->SetFogEnd(0);  highlight->SetFogColor(Colors::Red);}  
                         });
-                    
+                    //unhighlight prev object 
                     if(m_lastID != -1 && m_lastID != selectedID)
                         m_displayList[m_lastID].m_model->UpdateEffects([&](IEffect* effect) {
                             auto highlight = dynamic_cast<IEffectFog*>(effect);
@@ -635,12 +637,14 @@ void Game::SaveDisplayChunk(ChunkObject * SceneChunk)
 	m_displayChunk.SaveHeightMap();			//save heightmap to file.
 }
 
+//stores id of copied object
 void Game::copyObj(int oldObj)
 {
     m_copiedID = oldObj;
 }
 
-void Game::pasteObj(std::vector<SceneObject>& SceneGraph)
+//instantiates object from copiedID. most of this was copied from build display list 
+void Game::pasteObj(std::vector<SceneObject>& SceneGraph)   //scenegraph is passed in as a reference so that it can be updated with the new object. This allows the new object to be copied, saved and manipulated
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto devicecontext = m_deviceResources->GetD3DDeviceContext();
@@ -673,7 +677,7 @@ void Game::pasteObj(std::vector<SceneObject>& SceneGraph)
     });
 
     //set position     
-    newDisplayObject.m_position.x = m_CameraManager->getCamLookAt().x;
+    newDisplayObject.m_position.x = m_CameraManager->getCamLookAt().x;  //changed position of object to appear in front of the camera. 
     newDisplayObject.m_position.y = m_CameraManager->getCamLookAt().y;
     newDisplayObject.m_position.z = m_CameraManager->getCamLookAt().z;
 
@@ -704,13 +708,13 @@ void Game::pasteObj(std::vector<SceneObject>& SceneGraph)
     newDisplayObject.m_light_quadratic = SceneGraph.at(m_copiedID).light_quadratic;
 
     SceneObject s = SceneGraph.at(m_copiedID);
-    s.posX = m_CameraManager->getCamLookAt().x;
+    s.posX = m_CameraManager->getCamLookAt().x;     //object position set to cam pos before it is added to scene graph. 
     s.posY = m_CameraManager->getCamLookAt().y;
     s.posZ = m_CameraManager->getCamLookAt().z;
 
    // s.posY += 1.0f;
-    SceneGraph.push_back(s);
-    m_displayList.push_back(newDisplayObject);
+    SceneGraph.push_back(s);    //new object passed back to scene graph
+    m_displayList.push_back(newDisplayObject);  //and display list 
 }
 
 #ifdef DXTK_AUDIO

@@ -1,4 +1,5 @@
 #include "CinematicCam.h"
+//this class is for cameras which move alone a pre recorded path 
 
 CinematicCam::CinematicCam(Camera cam)
 {
@@ -17,8 +18,8 @@ CinematicCam::CinematicCam(Camera cam)
 
 void CinematicCam::getInput(InputCommands input)
 {
-	if(tracking)
-		Camera::getInput(input);
+	if(tracking)	//if positions are being recorded then inputs are handled the same as in parent camera class.
+		Camera::getInput(input);	//stops handling inputs when playback has been begun
 
 	if (input.completeCineCam) {
 		tracking = false;
@@ -26,7 +27,7 @@ void CinematicCam::getInput(InputCommands input)
 	}
 }
 
-void CinematicCam::updatePos()
+void CinematicCam::updatePos()	//this function is for looping through the saved positions and orientations 
 {
 	if (currentPos == totalPos && currentRot == totalRotation)
 		playBack();
@@ -48,7 +49,7 @@ void CinematicCam::Update(InputCommands input)
 {
 	getInput(input);
 
-	if (tracking){// //while tracking cam position and rotation updates and while the camera is moving 
+	if (tracking){// while recording, positions and orientation and added to corresponding vectors 
 		DirectX::SimpleMath::Vector3 newPos = getCamPosition();
 		DirectX::SimpleMath::Vector3 newRot = getCamOrientaion();
 
@@ -57,13 +58,13 @@ void CinematicCam::Update(InputCommands input)
 		orientations.push_back(newRot); //add rot to vector of orientations 
 	}
 	
-	if(!tracking)
+	if(!tracking)	//if the camera is no longer being controlled and playback has begun
 	{
-		updatePos();
+		updatePos();	//update position
 	}
 }
 
-void CinematicCam::playBack()
+void CinematicCam::playBack()	//Camera returns to the first position and orienation saved 
 {
 	totalPos = positions.size();
 	totalRotation = orientations.size();

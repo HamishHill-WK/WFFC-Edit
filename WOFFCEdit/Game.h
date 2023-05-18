@@ -55,27 +55,23 @@ public:
 	void SaveDisplayChunk(ChunkObject *SceneChunk);	//saves geometry et al
 	void ClearDisplayList();
 
-	void copyObj(int oldObj);
-	void pasteObj(std::vector<SceneObject>& SceneGraph);
+	void copyObj(int oldObj);	//hh
+	void pasteObj(std::vector<SceneObject>& SceneGraph);//hh
 
 	DirectX::XMFLOAT3 intpoint;
 
-	CameraManager* m_CameraManager; 
+	CameraManager* m_CameraManager; //hh
 
-	void updateObj(SceneObject objId, int obj);
+	void updateObj(SceneObject objId, int obj); //hh
 
-	void chunk();
+	void chunk(); //hh
 	int	 MousePicking();
-	void DoubleLClick(int i);
-	void TripleLClick(int i);
-	float LineIntersectsPlane(const DirectX::SimpleMath::Vector3& lineOrigin, 
-		const DirectX::SimpleMath::Vector3& lineDirection, 
-		const DirectX::SimpleMath::Vector3& planeNormal, 
-		const DirectX::SimpleMath::Vector3& planePoint);// , float& outDistance);
-	int m_lastID;
-	int m_copiedID;
-	float distance;
-	bool m_wireFrame;
+	void DoubleLClick(int i); //hh	
+	void TripleLClick(int i); //hh
+
+	int m_lastID;	//hh
+	int m_copiedID;	//hh
+	bool m_wireFrame; //hh
 
 #ifdef DXTK_AUDIO
 	void NewAudioDevice();
@@ -100,7 +96,7 @@ private:
 	//functionality
 	float								m_movespeed;
 
-	Camera* camera;
+	Camera* camera;	//hh
 
 	//control variables
 	bool m_grid;							//grid rendering on / off

@@ -71,6 +71,6 @@ public:
 	}
 
 private:
-	std::vector<DirectX::SimpleMath::Vector3> positions;
+	std::vector<DirectX::SimpleMath::Vector3> positions;	//containers for this camera's recorded path 
 	std::vector<DirectX::SimpleMath::Vector3> orientations;
 };

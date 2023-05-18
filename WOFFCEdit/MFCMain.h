@@ -35,13 +35,13 @@ private:
 	afx_msg void MenuFileQuit();
 	afx_msg void MenuFileSaveTerrain();
 	afx_msg void MenuEditSelect();
-	afx_msg	void ToolBarButton1();
-	afx_msg	void switchObjMode();
-	afx_msg	void switchCamModeMain();
-	afx_msg	void switchCamModeStill();
-	afx_msg	void switchCamModeCine();
-	afx_msg	void switchCamNum();
-	afx_msg void TerrainEditor();
+	afx_msg	void ToolBarButton1();//hh
+	afx_msg	void switchObjMode();//hh
+	afx_msg	void switchCamModeMain();//hh
+	afx_msg	void switchCamModeStill();//hh
+	afx_msg	void switchCamModeCine();//hh
+	afx_msg	void switchCamNum();//hh
+	afx_msg void TerrainEditor();//hh
 
 
 	DECLARE_MESSAGE_MAP()	// required macro for message map functionality  One per class

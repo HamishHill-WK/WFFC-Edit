@@ -33,13 +33,13 @@ public:
 
 	void emptyBinaryFile();	//function to clear binary files
 
-	DirectX::SimpleMath::Vector3 getCamPosition();
-	DirectX::SimpleMath::Vector3 getCamLookAt();
+	DirectX::SimpleMath::Vector3 getCamPosition();	//get position of current cam
+	DirectX::SimpleMath::Vector3 getCamLookAt();	//get look direction of current cam
 
-	std::vector<CinematicCam*> CinematicCams;
-	std::vector<StillCamera*> StillCams;
+	std::vector<CinematicCam*> CinematicCams;	//Container for cinematic cams 
+	std::vector<StillCamera*> StillCams;		//container for stillcams
 	Camera* mainCamera;
 	
-	int currentCam;
-	CamType camType; 
+	int currentCam;	//current cam id
+	CamType camType; //current type of cam
 };

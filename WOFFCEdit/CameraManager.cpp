@@ -3,17 +3,18 @@
 
 CameraManager::CameraManager()
 {
-	//emptyBinaryFile();
+	//uncomment to clear binary file of existing still cams and cinematic cams 
+	//emptyBinaryFile(); 
 
 	mainCamera = new Camera();	//create the default camera 
 	currentCam = 0;
 	camType = main;
-	loadBinary();
+	loadBinary();	//still cams and cinematic cams are loaded in from binary files 
 }
 
 CameraManager::~CameraManager()
 {
-	saveToBinary();	// cinematic and still cams vectors saved on deconstruction
+	saveToBinary();	// cinematic and still cams vectors saved to binary file on deconstruction
 }
 
 void CameraManager::addCinematicCam()	//create a cinematic cam
@@ -183,12 +184,12 @@ void CameraManager::loadBinary()
 	size_t size;
 	file.read(reinterpret_cast<char*>(&size), sizeof(size));
 
-	if (size < MAXSSIZE_T)
+	if (size < MAXSSIZE_T)	//if the file is empty is will return maxsize_t for its size - should have a better check for this 
 		// Read each 3D vector
 		for (size_t j = 0; j < size; ++j) {
 			CinematicCam* element = new CinematicCam(Camera());
 			element->deserialize1(file);
-			element->tracking = false;
+			element->tracking = false;	
 			element->playBack();
 			CinematicCams.push_back(element);
 		}
@@ -211,7 +212,7 @@ void CameraManager::loadBinary()
 }
 
 void CameraManager::saveToBinary()
-{	//vectors are saved in seperate files to allow for modularity 
+{	//vectors are saved in seperate files to allow for modularity and avoid the data getting messy 
 	std::ofstream file("CineCams.bin", std::ios::binary);
 	if (!file) return; // if binary file could not be accessed return
 
@@ -243,10 +244,10 @@ void CameraManager::saveToBinary()
 
 void CameraManager::emptyBinaryFile()	//debug function for clearing binary file 
 {
-	//std::ofstream file("StillCams.bin", std::ios::binary | std::ios::trunc);
-	//if (!file) return;
+	std::ofstream file("StillCams.bin", std::ios::binary | std::ios::trunc);
+	if (!file) return;
 
-	//file.close();
+	file.close();
 
 	std::ofstream file1("CineCams.bin", std::ios::binary | std::ios::trunc);
 	if (!file1) return;

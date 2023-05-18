@@ -43,9 +43,11 @@ Camera::Camera() {
 }
 
 void Camera::Update(InputCommands input){
+
 	getInput(input);
 
-	if (m_movingTo) {
+	//if lerping to an object move forward until distance is less than 5 units. 
+	if (m_movingTo) {	
 		float  distance = DirectX::SimpleMath::Vector3::Distance(m_camPosition, m_camTargetPos);
 
 		if (distance >= 5.0f) {
@@ -87,7 +89,7 @@ void Camera::setCamTarget(DirectX::SimpleMath::Vector3 newTarget, bool moveTo) {
 	if (m_camOrientation.x < -90)
 		m_camOrientation.x = -90;
 
-	if (moveTo) {
+	if (moveTo) {	//if we want to move to the object then it is set at the new target and moving set to true
 		m_camTargetPos = newTarget;
 		m_movingTo = true;
 	}
@@ -99,7 +101,7 @@ void Camera::moveForward()
 	setLookAt();
 }
 
-void Camera::setLookAt(){
+void Camera::setLookAt(){	//calculates look vector 
 
 	if (m_camOrientation.x > 90)
 		m_camOrientation.x = 90;

@@ -328,18 +328,11 @@ void ToolMain::switchCamNum()
 
 void ToolMain::Tick(MSG *msg)
 {
-	//if (m_toolInputCommands.createCineCam) {
-		//m_toolInputCommands.createCineCam = false;
-
-//		m_d3dRenderer.m_CameraManager->addCinematicCam();
-	//}
-	//m_toolInputCommands.createCineCam = false;
-
 	if (m_toolInputCommands.switchCam) {
 		m_d3dRenderer.m_CameraManager->swichcam();
 	}
 
-	if (m_toolInputCommands.switchObjMode) {
+	if (m_toolInputCommands.switchObjMode) {//had mode switching for object manipulation on a key press so this may be obsolete now 
 		m_toolInputCommands.switchObjMode = false;
 		if (m_toolInputCommands.mode_translate) {
 			m_toolInputCommands.mode_translate = false;
@@ -359,6 +352,7 @@ void ToolMain::Tick(MSG *msg)
 		//m_toolInputCommands.switchObjMode = false;
 	}
 
+	//OBJECT MANIPULATION START  
 	if (m_d3dRenderer.m_lastID != -1) {
 		if (m_toolInputCommands.objUp) {
 			if (m_toolInputCommands.mode_translate)
@@ -439,8 +433,9 @@ void ToolMain::Tick(MSG *msg)
 			m_d3dRenderer.updateObj(m_sceneGraph.at(m_d3dRenderer.m_lastID), m_d3dRenderer.m_lastID);
 		}
 	}
+	//OBJECT MANIPULATION END 
 
-
+	//COPY PASTE START 
 	if (m_toolInputCommands.copy) {
 		m_toolInputCommands.copy = false;
 		if(m_selectedObject != -1)
@@ -450,27 +445,32 @@ void ToolMain::Tick(MSG *msg)
 	if (m_toolInputCommands.paste) {
 		if (m_toolInputCommands.pasteDelay <= 0.0f) {
 			m_d3dRenderer.pasteObj(m_sceneGraph);
-			m_toolInputCommands.pasteDelay = 10.0f;
+			m_toolInputCommands.pasteDelay = 10.0f;	// a delay was added for pasting so hundreds of objects are not created on a single key press 
 		}
 	}
+
 	if (m_toolInputCommands.pasteDelay > 0.0f)
 		m_toolInputCommands.pasteDelay -= 0.5f;
+	//COPY PASTE END 
 
+	//WIREFRAME MODE START
 	if (m_toolInputCommands.mode_wireFrame) {
 		if (m_toolInputCommands.wireFrameDelay <= 0.0f) {
-			m_d3dRenderer.m_wireFrame = !m_d3dRenderer.m_wireFrame;
+			m_d3dRenderer.m_wireFrame = !m_d3dRenderer.m_wireFrame;	//delay added for wireframe so the mode isn't toggled multiple times in a single key press 
 			m_toolInputCommands.wireFrameDelay = 10.0f;
 		}
 	}
+
 	if (m_toolInputCommands.wireFrameDelay > 0.0f)
 		m_toolInputCommands.wireFrameDelay -= 0.5f;
+	//WIREFRAME MODE END 
 
+	//MOUSE CONTROLS START 
 	if (m_toolInputCommands.mouse_LB_DoubleClickTime > 0.0f)
 		m_toolInputCommands.mouse_LB_DoubleClickTime -= 0.1f;
 
 	if (m_toolInputCommands.mouse_LB_Down)
 	{
-
 		if (!m_toolInputCommands.mode_terrainEditor) {
 			if (m_secondObject == m_selectedObject) {
 				m_thirdObject = m_d3dRenderer.MousePicking();
@@ -506,10 +506,10 @@ void ToolMain::Tick(MSG *msg)
 				m_toolInputCommands.mouse_LB_Down = false;
 				return;
 			}
-
 		}
 
-		if (m_toolInputCommands.mode_terrainEditor) {
+		//if currently in terrain editor mode do terrain editor stuff
+		if (m_toolInputCommands.mode_terrainEditor) {	 
 			m_d3dRenderer.chunk();
 			m_toolInputCommands.mouse_LB_Down = false;
 
@@ -520,6 +520,7 @@ void ToolMain::Tick(MSG *msg)
 			}
 		}
 	}
+	//MOUSE CONTROLS END
 
 
 	//Renderer Update Call

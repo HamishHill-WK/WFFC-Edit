@@ -13,15 +13,15 @@ public:
 	Camera();
 	//~Camera();
 
-	void getInput(InputCommands input);
-	void setLookAt();
+	void getInput(InputCommands input);	//handles input
+	void setLookAt();					//calculates forward vector from position and orientation
 	void Update(InputCommands input);
 
 	DirectX::SimpleMath::Vector3 getCamPosition();
 	DirectX::SimpleMath::Vector3 getCamLookAt();
 	DirectX::SimpleMath::Vector3 getCamOrientaion();
 	
-	void serialize(std::ostream& stream) const
+	void serialize(std::ostream& stream) const	//lambda for serializing data to binary file
 	{
 		// Serialize the pos and rot variables
 		stream.write(reinterpret_cast<const char*>(&m_camPosition.x), sizeof(m_camPosition.x));
@@ -31,10 +31,9 @@ public:
 		stream.write(reinterpret_cast<const char*>(&m_camOrientation.x), sizeof(m_camOrientation.x));
 		stream.write(reinterpret_cast<const char*>(&m_camOrientation.y), sizeof(m_camOrientation.y));
 		stream.write(reinterpret_cast<const char*>(&m_camOrientation.z), sizeof(m_camOrientation.z));
-		// ... serialize other member variables
 	}
 
-	void deserialize(std::istream& stream)
+	void deserialize(std::istream& stream) //lambda for deserializing data from binary file
 	{
 		// Deserialize the pos and rot variables
 		stream.read(reinterpret_cast<char*>(&m_camPosition.x), sizeof(m_camPosition.x));
@@ -44,12 +43,10 @@ public:
 		stream.read(reinterpret_cast<char*>(&m_camOrientation.x), sizeof(m_camOrientation.x));
 		stream.read(reinterpret_cast<char*>(&m_camOrientation.y), sizeof(m_camOrientation.y));
 		stream.read(reinterpret_cast<char*>(&m_camOrientation.z), sizeof(m_camOrientation.z));
-
-		// ... deserialize other member variables
 	}
 
+	void setCamTarget(DirectX::SimpleMath::Vector3 newTarget, bool moveTo); //set camera look direction towards object passed in 
 
-	void setCamTarget(DirectX::SimpleMath::Vector3 newTarget, bool moveTo);
 private:
 
 	DirectX::SimpleMath::Vector3		m_camLookAt;
@@ -59,7 +56,7 @@ private:
 	float								m_movespeed;
 	void moveForward();
 
-protected:
+protected: 
 	DirectX::SimpleMath::Vector3		m_camPosition;
 	DirectX::SimpleMath::Vector3		m_camOrientation;
 	DirectX::SimpleMath::Vector3		m_camTargetPos;
