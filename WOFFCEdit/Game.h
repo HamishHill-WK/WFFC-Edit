@@ -14,6 +14,8 @@
 #include "Camera.h"
 #include <vector>
 #include "CameraManager.h"
+#include <VertexTypes.h>  // For DirectX::VertexPositionColor
+#include <PrimitiveBatch.h>  // For DirectX::PrimitiveBatch
 
 
 // A basic game implementation that creates a D3D11 device and
